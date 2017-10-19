@@ -209,13 +209,14 @@ view config =
     div [ Styles.container ]
         [ div [ Styles.sections ]
             [ Sections.view <| toIterator config ]
-        , div [ Styles.ad ]
-            [ Ad.view
-                { zoneId = Constants.carbonZoneId
-                , serve = Constants.carbonServe
-                , placement = Constants.carbonPlacement
-                }
-            ]
+
+        -- , div [ Styles.ad ]
+        --     [ Ad.view
+        --         { zoneId = Constants.carbonZoneId
+        --         , serve = Constants.carbonServe
+        --         , placement = Constants.carbonPlacement
+        --         }
+        --     ]
         ]
 
 
