@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "engines": {
-    "node": "6.9.5"
+    "node": ">=6.9.5"
   },
   "dependencies": {
     "autoprefixer": "7.1.4",
@@ -20,7 +20,8 @@
     "elm-css": "0.7.0-beta10",
     "elm-format": "0.7.0-exp",
     "elm-test": "0.18.7",
-    "elm-webpack-loader": "https://github.com/lukewestby/elm-webpack-loader.git",
+    "elm-webpack-loader":
+      "https://github.com/lukewestby/elm-webpack-loader.git",
     "es6-promise": "4.1.0",
     "extract-text-webpack-plugin": "3.0.0",
     "json-loader": "0.5.4",
@@ -36,20 +37,26 @@
     "webpack-manifest-plugin": "1.1.2"
   },
   "scripts": {
-    "elm-css:build": "cd client && elm-css -o elm-stuff/generated-code/rtfeldman/build",
-    "elm-css:concat": "find client/elm-stuff/generated-code/rtfeldman/build -name '*.css' | xargs cat > client/elm-stuff/generated-code/rtfeldman/elm-css/output.css",
+    "elm-css:build":
+      "cd client && elm-css -o elm-stuff/generated-code/rtfeldman/build",
+    "elm-css:concat":
+      "find client/elm-stuff/generated-code/rtfeldman/build -name '*.css' | xargs cat > client/elm-stuff/generated-code/rtfeldman/elm-css/output.css",
     "elm-css": "npm run elm-css:build && npm run elm-css:concat",
-    "watch:elm-css": "nodemon --exec \"npm run elm-css\" --watch client/css -e elm",
-    "watch:webpack": "webpack-dev-server --watch --config ./webpack.dev.config.js",
+    "watch:elm-css":
+      "nodemon --exec \"npm run elm-css\" --watch client/css -e elm",
+    "watch:webpack":
+      "webpack-dev-server --watch --config ./webpack.dev.config.js",
     "watch": "run-p watch:**",
     "clean": "rm -rf ./build",
     "install:elm": "cd client && elm-package install --yes",
     "clean:elm": "rm -rf ./elm-stuff/build-artifacts/0.18.0/user",
     "build:make:0.18.0": "cd ./make/0.18.0 && npm install && npm run build",
     "build:make": "npm run build:make:0.18.0",
-    "build:production": "npm run install:elm && npm run elm-css && webpack --config ./webpack.prod.config.js",
+    "build:production":
+      "npm run install:elm && npm run elm-css && webpack --config ./webpack.prod.config.js",
     "deploy": "python ./scripts/deploy_assets.py",
-    "heroku-postbuild": "npm test && npm run build:make && npm run build:production && npm run deploy",
+    "heroku-postbuild":
+      "npm test && npm run build:make && npm run build:production && npm run deploy",
     "test:make:0.18.0": "cd ./make/0.18.0 && npm install && npm test",
     "test:make": "npm run test:make:0.18.0",
     "test": "npm run test:make"
