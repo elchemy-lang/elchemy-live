@@ -3,8 +3,11 @@ module Pages.Editor.Sidebar.View exposing (..)
 import Data.Ellie.TermsVersion as TermsVersion exposing (TermsVersion)
 import Data.Elm.Package as Package exposing (Package)
 import Data.List.Iterator as Iterator exposing (Iterator(..))
-import Ellie.Constants as Constants
-import Ellie.Ui.Ad as Ad
+
+
+-- import Ellie.Constants as Constants
+-- import Ellie.Ui.Ad as Ad
+
 import Ellie.Ui.Button as Button
 import Ellie.Ui.Checkbox as Checkbox
 import Ellie.Ui.Icon as Icon

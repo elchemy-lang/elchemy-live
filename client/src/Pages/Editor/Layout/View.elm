@@ -1,9 +1,9 @@
 module Pages.Editor.Layout.View exposing (..)
 
 import Ellie.Ui.Button as Button
-import Ellie.Ui.Icon as Icon
 
 
+-- import Ellie.Ui.Icon as Icon
 -- import Extra.Html as Html
 
 import Extra.Html.Attributes as Attributes exposing (style)
@@ -58,16 +58,12 @@ viewCollapseButton msg collapsed label =
     div [ Styles.collapseButton ]
         [ Button.view
             { label = label
-            , disabled = False
+            , disabled = True
             , size = Button.Medium
             , style = Button.Link
             , attributes = []
             , action = Button.click msg
-            , icon =
-                if collapsed then
-                    Just Icon.Unfold
-                else
-                    Just Icon.Fold
+            , icon = Nothing
             }
         ]
 
