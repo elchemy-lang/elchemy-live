@@ -174,27 +174,26 @@ viewAbout : Config msg -> () -> Html msg
 viewAbout config () =
     div [ Styles.about ]
         [ div [ Styles.aboutHeading ]
-            [ text "Ellie is the Elchemy platform in your browser." ]
+            [ text "Elchemy platform in your browser." ]
         , p [ Styles.aboutParagraph ]
-            [ text "With Ellie you can use all of Elm’s features to build amazing animations, precise SSCCEs, cool demos, and anything else you could create with Elm in an ordinary development environment."
+            [ text "With Elchemy you can use all of Elm's and Elixir features to test an everyday experience with Elchemy development."
             ]
         , p [ Styles.aboutParagraph ]
             [ text "Add packages in the sidebar, write a program, work through compiler errors, and share your work with the world."
             ]
         , p [ Styles.aboutParagraph ]
-            [ text "All content created with Ellie is released under the "
+            [ text "All content created with Elchemy online is released under the "
             , a [ href "https://opensource.org/licenses/MIT" ] [ text "MIT license" ]
-            , text ". We reserve the right to remove or modify any content created with Ellie for any reason. Report abuse and ask questions at "
-            , a [ href "mailto:ellie-app@lukewestby.com" ] [ text "ellie-app@lukewestby.com" ]
-            , text "."
+            , text ". We reserve the right to remove or modify any content created with Elchemy live for any reason."
             ]
-        , p [ Styles.aboutParagraph ]
-            [ text "Our latest terms of service can be found "
-            , a [ href <| TermsVersion.link config.latestTerms ] [ text "here" ]
-            , text "."
-            ]
+
+        -- , p [ Styles.aboutParagraph ]
+        --     [ text "Our latest terms of service can be found "
+        --     , a [ href <| TermsVersion.link config.latestTerms ] [ text "here" ]
+        --     , text "."
+        --     ]
         , p [ Styles.aboutCopyright ]
-            [ text "© 2017 Luke Westby" ]
+            [ text "© 2017 Elchemy" ]
         ]
 
 

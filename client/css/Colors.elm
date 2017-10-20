@@ -41,7 +41,7 @@ mediumGray =
 
 pink : Color
 pink =
-    hex "#FC6ECC"
+    hex "#5669aa"
 
 
 darkGray : Color

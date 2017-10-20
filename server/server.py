@@ -182,15 +182,13 @@ def get_default_revision() -> Any:
         'title': '',
         'description': '',
         'id': None,
-        'elmCode': '''module Main exposing (main)
-
-import Html exposing (Html, text)
+        'elmCode': '''module Main exposing (..)
 
 
-main : Html msg
-main =
-    text "Hello, World!"
-''',
+run : String
+run =
+    "Hello, world!"''',
+
         'htmlCode': '''<html>
 <head>
   <style>

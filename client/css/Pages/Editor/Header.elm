@@ -75,8 +75,11 @@ logo =
     uniqueSvgClass
         [ fill Colors.lightGray
         , height (px 20)
-        , width (px 51)
+        , width (px 10)
         , marginRight (px 24)
+        , fontFamilies [ "Helvetica Neue" ]
+        , fontWeight (int 700)
+        , color Colors.lightGray
         ]
 
 

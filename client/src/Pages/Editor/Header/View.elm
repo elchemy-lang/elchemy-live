@@ -15,13 +15,11 @@ import Ellie.Ui.CopyLink as CopyLink
 import Ellie.Ui.Icon as Icon
 import Ellie.Ui.Popout as Popout
 import Extra.Html as Html
-import Html exposing (Html, a, button, div, h1, header, span, text)
+import Html exposing (Html, a, button, div, h1, header, span, text, img)
 import Html.Attributes exposing (href, tabindex, target, title)
 import Pages.Editor.Header.Model exposing (Model)
 import Pages.Editor.Header.Styles as Styles
 import Pages.Editor.Header.Update exposing (Msg(..))
-import Svg exposing (svg, use)
-import Svg.Attributes exposing (xlinkHref)
 
 
 type SaveOption
@@ -82,8 +80,11 @@ embedLink revisionId =
 
 viewLogo : Html msg
 viewLogo =
-    svg [ Styles.logo ]
-        [ use [ xlinkHref "#ellie-logo" ] [] ]
+    div [ Styles.logo ] [ text "El" ]
+
+
+
+-- a [ Styles.logo, href "" ] []
 
 
 viewSaveButton : Config msg -> Html msg

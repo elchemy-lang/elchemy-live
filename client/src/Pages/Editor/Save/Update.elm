@@ -136,7 +136,7 @@ update model msg =
                 NotificationInfo
                     "Failed To Save Project"
                     Notification.Error
-                    ("Ellie couldn't save your project. Here's what the server said:\n" ++ apiError.explanation)
+                    ("Elchemy couldn't save your project. Here's what the server said:\n" ++ apiError.explanation)
             , Cmd.none
             )
 
@@ -155,27 +155,27 @@ update model msg =
                                 , owned = True
                             }
                     in
-                    ( { model | saveState = SaveState.Uploading updatedRevision }
-                    , Nothing
-                    , Aws.uploadBatch (revisionSig.projectId ++ "-" ++ toString revisionSig.revisionNumber)
-                        [ { name = "revision.json"
-                          , mime = "application/json"
-                          , url = revisionSig.url
-                          , fields = revisionSig.fields
-                          , content =
-                                updatedRevision
-                                    |> Revision.encoder
-                                    |> Encode.encode 0
-                                    |> Aws.Direct
-                          }
-                        , { name = "result.html"
-                          , mime = "text/html"
-                          , url = resultSig.url
-                          , fields = resultSig.fields
-                          , content = Aws.Stream resultUrl
-                          }
-                        ]
-                    )
+                        ( { model | saveState = SaveState.Uploading updatedRevision }
+                        , Nothing
+                        , Aws.uploadBatch (revisionSig.projectId ++ "-" ++ toString revisionSig.revisionNumber)
+                            [ { name = "revision.json"
+                              , mime = "application/json"
+                              , url = revisionSig.url
+                              , fields = revisionSig.fields
+                              , content =
+                                    updatedRevision
+                                        |> Revision.encoder
+                                        |> Encode.encode 0
+                                        |> Aws.Direct
+                              }
+                            , { name = "result.html"
+                              , mime = "text/html"
+                              , url = resultSig.url
+                              , fields = resultSig.fields
+                              , content = Aws.Stream resultUrl
+                              }
+                            ]
+                        )
 
                 ( Just termsVersion, SaveState.RequestingSignature (Err errors) ) ->
                     let
@@ -190,20 +190,20 @@ update model msg =
                                 , owned = True
                             }
                     in
-                    ( { model | saveState = SaveState.Uploading updatedRevision }
-                    , Nothing
-                    , Aws.upload (revisionSig.projectId ++ "-" ++ toString revisionSig.revisionNumber)
-                        { name = "revision.json"
-                        , mime = "application/json"
-                        , url = revisionSig.url
-                        , fields = revisionSig.fields
-                        , content =
-                            updatedRevision
-                                |> Revision.encoder
-                                |> Encode.encode 0
-                                |> Aws.Direct
-                        }
-                    )
+                        ( { model | saveState = SaveState.Uploading updatedRevision }
+                        , Nothing
+                        , Aws.upload (revisionSig.projectId ++ "-" ++ toString revisionSig.revisionNumber)
+                            { name = "revision.json"
+                            , mime = "application/json"
+                            , url = revisionSig.url
+                            , fields = revisionSig.fields
+                            , content =
+                                updatedRevision
+                                    |> Revision.encoder
+                                    |> Encode.encode 0
+                                    |> Aws.Direct
+                            }
+                        )
 
                 _ ->
                     ( model, Nothing, Cmd.none )
@@ -224,7 +224,7 @@ update model msg =
                                     NotificationInfo
                                         "Your Project Was Saved"
                                         Notification.Success
-                                        "Ellie saved your project! Your revision number has been updated in the URL."
+                                        "Elchemy saved your project! Your revision number has been updated in the URL."
                                 , revision.id
                                     |> Maybe.map Routing.SpecificRevision
                                     |> Maybe.map (Routing.construct >> Navigation.newUrl)
@@ -250,7 +250,7 @@ update model msg =
                 NotificationInfo
                     "Failed To Save Project"
                     Notification.Error
-                    ("Ellie couldn't save your project. Here's what the server said:\n" ++ message)
+                    ("Elchemy couldn't save your project. Here's what the server said:\n" ++ message)
             , Cmd.none
             )
 
