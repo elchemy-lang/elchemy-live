@@ -186,14 +186,13 @@ def organize_packages(
 
 
 def download_searchable_packages() -> Dict[PackageName, SearchablePackages]:
-    # body = s3.Object(BUCKET_NAME,
-    #                  'package-artifacts/searchable.json').get()['Body']
-    # data = body.read()
-    # packages = list(
-    #     cat_optionals(PackageInfo.from_json(x) for x in json.loads(data)))
-    # body.close()
-    # return organize_packages(packages)
-    return []
+    body = s3.Object(BUCKET_NAME,
+                      'package-artifacts/searchable.json').get()['Body']
+    data = body.read()
+    packages = list(
+        cat_optionals(PackageInfo.from_json(x) for x in json.loads(data)))
+    body.close()
+    return organize_packages(packages)
 
 
 def parse_int(string: str) -> Optional[int]:

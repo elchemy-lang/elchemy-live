@@ -13,6 +13,9 @@ from typing import (Any, Dict, Iterator, List, NamedTuple, Optional, Set,
                     SupportsInt, Tuple, TypeVar)
 
 import boto3
+import boto3.session
+import botocore
+
 import glob2
 import requests
 from joblib import Parallel, delayed
@@ -22,7 +25,7 @@ from .classes import Constraint, PackageInfo, Version
 
 BUCKET_NAME = os.environ['AWS_S3_BUCKET']
 
-s3 = boto3.resource('s3')
+s3 = boto3.resource('s3', config= boto3.session.Config(signature_version='s3v4'))
 bucket = s3.Bucket(BUCKET_NAME)
 
 T = TypeVar('T')
