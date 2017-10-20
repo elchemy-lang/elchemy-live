@@ -7,3 +7,6 @@ start-server:
 
 start-client:
 	dotenv yarn watch
+
+build-compiler:
+	dotenv npm run-script build:make
