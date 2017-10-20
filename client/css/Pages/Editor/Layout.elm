@@ -26,7 +26,7 @@ sidebar =
         , height (pct 100)
         , position relative
         , zIndex (int 1)
-        , Colors.boxShadow
+        , Colors.boxShadow |> .right
         , paddingTop (px 10)
         ]
 

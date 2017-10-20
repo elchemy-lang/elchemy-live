@@ -62,7 +62,7 @@ accent =
 link : UniqueClass
 link =
     uniqueClass
-        [ color Colors.white
+        [ color (hex "#606671")
         , padding zero |> important
         , property "background" "none"
         , fontWeight bold

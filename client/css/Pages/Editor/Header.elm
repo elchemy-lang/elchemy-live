@@ -80,7 +80,7 @@ logo =
         , fontFamilies [ "Helvetica Neue" ]
         , fontWeight (int 700)
         , fontSize (Css.em 1.7)
-        , color Colors.white
+        , color (Colors.white)
         ]
 
 
