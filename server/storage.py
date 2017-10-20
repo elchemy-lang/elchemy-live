@@ -45,10 +45,8 @@ def _unsign_cookie(value: str) -> Optional[str]:
     to_match = _sign_cookie(unsigned_value)
     return unsigned_value if to_match == value else None
 
-region = 'eu-west-2'
 s3 = boto3.resource('s3', config= boto3.session.Config(signature_version='s3v4'))
-session = boto3.session.Session(region_name=region)
-client = session.client('s3', config= boto3.session.Config(signature_version='s3v4'))
+client = boto3.client('s3', config= boto3.session.Config(signature_version='s3v4'))
 bucket = s3.Bucket(BUCKET_NAME)
 
 

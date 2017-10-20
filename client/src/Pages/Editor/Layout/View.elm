@@ -88,7 +88,7 @@ viewEditors config =
             , viewCollapseButton
                 (config.mapMsg <| ToggleEditorCollapse Model.JustHtmlOpen)
                 (config.model.editorCollapse == Model.JustHtmlOpen)
-                "Elm"
+                "Elchemy"
             ]
 
         -- , Html.viewIf (config.model.editorCollapse == Model.BothOpen) <|

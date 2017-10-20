@@ -174,7 +174,7 @@ viewAbout : Config msg -> () -> Html msg
 viewAbout config () =
     div [ Styles.about ]
         [ div [ Styles.aboutHeading ]
-            [ text "Ellie is the Elm platform in your browser." ]
+            [ text "Ellie is the Elchemy platform in your browser." ]
         , p [ Styles.aboutParagraph ]
             [ text "With Ellie you can use all of Elm’s features to build amazing animations, precise SSCCEs, cool demos, and anything else you could create with Elm in an ordinary development environment."
             ]
