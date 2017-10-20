@@ -258,8 +258,10 @@ viewSocialLink url description icon =
 
 viewRightSide : List (Html msg)
 viewRightSide =
-    [ viewSocialLink "https://github.com/lukewestby/ellie" "Repository" Icon.GitHub
-    , viewSocialLink "https://trello.com/b/7cFN60SP/ellie" "Roadmap" Icon.Trello
+    [ viewSocialLink "https://github.com/wende/elchemy" "Repository" Icon.GitHub
+
+    -- , viewSocialLink "https://twitter.com/ellie_editor" "Follow" Icon.Twitter
+    -- , viewSocialLink "https://trello.com/b/7cFN60SP/ellie" "Roadmap" Icon.Trello
     ]
 
 

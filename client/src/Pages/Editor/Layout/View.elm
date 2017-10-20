@@ -1,8 +1,11 @@
 module Pages.Editor.Layout.View exposing (..)
 
 import Ellie.Ui.Button as Button
-import Ellie.Ui.Icon as Icon
-import Extra.Html as Html
+
+
+-- import Ellie.Ui.Icon as Icon
+-- import Extra.Html as Html
+
 import Extra.Html.Attributes as Attributes exposing (style)
 import Html exposing (Html, aside, div, header, main_)
 import Html.Attributes exposing (id)
@@ -55,16 +58,12 @@ viewCollapseButton msg collapsed label =
     div [ Styles.collapseButton ]
         [ Button.view
             { label = label
-            , disabled = False
+            , disabled = True
             , size = Button.Medium
             , style = Button.Link
             , attributes = []
             , action = Button.click msg
-            , icon =
-                if collapsed then
-                    Just Icon.Unfold
-                else
-                    Just Icon.Fold
+            , icon = Nothing
             }
         ]
 
@@ -79,7 +78,7 @@ viewEditors config =
             [ Styles.editorContainer
             , Attributes.cond Styles.editorContainerCollapse <| config.model.editorCollapse == Model.JustHtmlOpen
             , Attributes.cond Styles.editorContainerFull <| config.model.editorCollapse == Model.JustElmOpen
-            , style "height" <| elmHeightCss config.model
+            , style "height" "100%" -- <| elmHeightCss config.model
             ]
             [ div
                 [ id config.elmId
@@ -89,31 +88,32 @@ viewEditors config =
             , viewCollapseButton
                 (config.mapMsg <| ToggleEditorCollapse Model.JustHtmlOpen)
                 (config.model.editorCollapse == Model.JustHtmlOpen)
-                "Elm"
+                "Elchemy"
             ]
-        , Html.viewIf (config.model.editorCollapse == Model.BothOpen) <|
-            div
-                [ Styles.editorResizeHandle
-                , style "top" <| elmHeightCss config.model
-                , onMouseDown (config.mapMsg EditorDragStarted)
-                ]
-                []
-        , div
-            [ Styles.editorContainer
-            , Attributes.cond Styles.editorContainerCollapse <| config.model.editorCollapse == Model.JustElmOpen
-            , Attributes.cond Styles.editorContainerFull <| config.model.editorCollapse == Model.JustHtmlOpen
-            , style "height" <| htmlHeightCss config.model
-            ]
-            [ div
-                [ id config.htmlId
-                , Attributes.cond (style "display" "none") <| config.model.editorCollapse == Model.JustElmOpen
-                ]
-                []
-            , viewCollapseButton
-                (config.mapMsg <| ToggleEditorCollapse Model.JustElmOpen)
-                (config.model.editorCollapse == Model.JustElmOpen)
-                "HTML"
-            ]
+
+        -- , Html.viewIf (config.model.editorCollapse == Model.BothOpen) <|
+        --     div
+        --         [ Styles.editorResizeHandle
+        --         , style "top" <| elmHeightCss config.model
+        --         , onMouseDown (config.mapMsg EditorDragStarted)
+        --         ]
+        --         []
+        -- , div
+        --     [ Styles.editorContainer
+        --     , Attributes.cond Styles.editorContainerCollapse <| config.model.editorCollapse == Model.JustElmOpen
+        --     , Attributes.cond Styles.editorContainerFull <| config.model.editorCollapse == Model.JustHtmlOpen
+        --     , style "height" <| htmlHeightCss config.model
+        --     ]
+        --     [ div
+        --         [ id config.htmlId
+        --         , Attributes.cond (style "display" "none") <| config.model.editorCollapse == Model.JustElmOpen
+        --         ]
+        --         []
+        --     , viewCollapseButton
+        --         (config.mapMsg <| ToggleEditorCollapse Model.JustElmOpen)
+        --         (config.model.editorCollapse == Model.JustElmOpen)
+        --         "HTML"
+        --     ]
         ]
 
 

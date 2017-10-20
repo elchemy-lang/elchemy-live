@@ -59,7 +59,7 @@ viewHeader : Tab -> RevisionId -> Html Msg
 viewHeader activeTab { projectId, revisionNumber } =
     header [ Styles.header ]
         [ div [ Styles.headerLeft ]
-            [ viewHeaderButton activeTab ElmTab Icon.ElmLogo "Elm"
+            [ viewHeaderButton activeTab ElmTab Icon.ElmLogo "Elchemy"
             , viewHeaderButton activeTab HtmlTab Icon.HtmlTag "HTML"
             , viewHeaderButton activeTab ResultsTab Icon.Eye "Results"
             ]

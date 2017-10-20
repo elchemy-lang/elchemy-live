@@ -11,8 +11,6 @@ from typing import (Any, Dict, Iterator, List, NamedTuple, Optional, Tuple,
                     TypeVar)
 from urllib.parse import urlparse
 
-import boto3
-import botocore
 from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
 from opbeat.contrib.flask import Opbeat
@@ -253,7 +251,7 @@ EDITOR_CONSTANTS = {
     'ENV': os.environ['ENV'],
     'APP_JS': assets.asset_path('editor.js'),
     'APP_CSS': assets.asset_path('editor.css'),
-    'GTM_ID': os.environ['GTM_ID'],
+    #'GTM_ID': os.environ['GTM_ID'],
     'PROFILE_PIC': 'idk.jpg',
     'CDN_BASE': os.environ['CDN_BASE'],
     'SERVER_HOSTNAME': os.environ['SERVER_HOSTNAME'],
@@ -296,7 +294,7 @@ EMBED_CONSTANTS = {
     'ENV': os.environ['ENV'],
     'APP_JS': assets.asset_path('embed.js'),
     'APP_CSS': assets.asset_path('embed.css'),
-    'GTM_ID': os.environ['GTM_ID'],
+    #'GTM_ID': os.environ['GTM_ID'],
     'PROFILE_PIC': 'idk.jpg',
     'CDN_BASE': os.environ['CDN_BASE'],
     'SERVER_HOSTNAME': os.environ['SERVER_HOSTNAME'],

@@ -3,8 +3,11 @@ module Pages.Editor.Sidebar.View exposing (..)
 import Data.Ellie.TermsVersion as TermsVersion exposing (TermsVersion)
 import Data.Elm.Package as Package exposing (Package)
 import Data.List.Iterator as Iterator exposing (Iterator(..))
-import Ellie.Constants as Constants
-import Ellie.Ui.Ad as Ad
+
+
+-- import Ellie.Constants as Constants
+-- import Ellie.Ui.Ad as Ad
+
 import Ellie.Ui.Button as Button
 import Ellie.Ui.Checkbox as Checkbox
 import Ellie.Ui.Icon as Icon
@@ -171,7 +174,7 @@ viewAbout : Config msg -> () -> Html msg
 viewAbout config () =
     div [ Styles.about ]
         [ div [ Styles.aboutHeading ]
-            [ text "Ellie is the Elm platform in your browser." ]
+            [ text "Ellie is the Elchemy platform in your browser." ]
         , p [ Styles.aboutParagraph ]
             [ text "With Ellie you can use all of Elm’s features to build amazing animations, precise SSCCEs, cool demos, and anything else you could create with Elm in an ordinary development environment."
             ]
@@ -209,13 +212,14 @@ view config =
     div [ Styles.container ]
         [ div [ Styles.sections ]
             [ Sections.view <| toIterator config ]
-        , div [ Styles.ad ]
-            [ Ad.view
-                { zoneId = Constants.carbonZoneId
-                , serve = Constants.carbonServe
-                , placement = Constants.carbonPlacement
-                }
-            ]
+
+        -- , div [ Styles.ad ]
+        --     [ Ad.view
+        --         { zoneId = Constants.carbonZoneId
+        --         , serve = Constants.carbonServe
+        --         , placement = Constants.carbonPlacement
+        --         }
+        --     ]
         ]
 
 

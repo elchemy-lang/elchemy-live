@@ -1,7 +1,6 @@
 import json
 import os
 
-import boto3
 
 _CDN_BASE = os.environ['CDN_BASE']
 _PRODUCTION = os.environ['ENV'] != 'development'

@@ -6,9 +6,11 @@ export const init = listener => {
   const worker = Elm.Main.worker()
 
   const compilerVersion = '0.18.0'
-  const compilerTag = ENV === 'production' ? '' : '-dev'
-  const compilerPath = `${CDN_BASE}/elm-compilers/${compilerVersion}${compilerTag}.js`
+  // const compilerTag = ENV === 'production' ? '' : '-dev'
+  const compilerTag = ''
+  //const compilerPath = `${CDN_BASE}/elm-compilers/${compilerVersion}${compilerTag}.js`
 
+  const compilerPath = "https://s3.eu-west-2.amazonaws.com/elchemy/assets/0.18.0.js"
   const compilerPromise =
     Compiler
       .init(
