@@ -116,13 +116,13 @@ onlineNotification isOnline =
         Cmds.notify NotificationReceived
             { level = Notification.Success
             , title = "You're Online!"
-            , message = "Ellie has detected that your internet connection is online."
+            , message = "Elchemy has detected that your internet connection is online."
             }
     else
         Cmds.notify NotificationReceived
             { level = Notification.Error
             , title = "You're Offline!"
-            , message = "Ellie can't connect to the server right now, so we've disabled most features."
+            , message = "Elchemy can't connect to the server right now, so we've disabled most features."
             }
 
 
@@ -184,10 +184,10 @@ update msg model =
                 updatedRevision =
                     { originalRevision | elmCode = model.stagedElmCode, htmlCode = model.stagedHtmlCode }
             in
-            ( { model | creatingGist = True }
-            , Api.createGist updatedRevision
-                |> Api.send CreateGistComplete
-            )
+                ( { model | creatingGist = True }
+                , Api.createGist updatedRevision
+                    |> Api.send CreateGistComplete
+                )
 
         CreateGistComplete result ->
             ( { model | creatingGist = False }
@@ -280,7 +280,7 @@ update msg model =
                         [ Cmds.notify NotificationReceived
                             { level = Notification.Success
                             , title = "Your Project Is Loaded!"
-                            , message = "Ellie found the project and revision you asked for. It's loaded up and ready to be run."
+                            , message = "Elchemy found the project and revision you asked for. It's loaded up and ready to be run."
                             }
                         , CodeMirror.updateValue "elmEditor" result.elmCode
                         , CodeMirror.updateValue "htmlEditor" result.htmlCode
@@ -293,7 +293,7 @@ update msg model =
                         Cmds.notify NotificationReceived
                             { level = Notification.Error
                             , title = "Failed To Load Project"
-                            , message = "Ellie couldn't load the project you asked for. Here's what the server said:\n" ++ apiError.explanation
+                            , message = "Elchemy couldn't load the project you asked for. Here's what the server said:\n" ++ apiError.explanation
                             }
             )
 
@@ -371,7 +371,7 @@ update msg model =
                 [ Cmds.notify NotificationReceived
                     { level = Notification.Error
                     , title = "Formatting Your Code Failed"
-                    , message = "Ellie couldn't format your code. Here's what the server said:\n" ++ apiError.explanation
+                    , message = "Elchemy couldn't format your code. Here's what the server said:\n" ++ apiError.explanation
                     }
                 , if apiError.statusCode == 500 then
                     Opbeat.capture
@@ -398,14 +398,14 @@ update msg model =
                 ( nextModel, notification, cmd ) =
                     Save.update model saveMsg
             in
-            ( nextModel
-            , Cmd.batch
-                [ notification
-                    |> Maybe.map (Cmds.notify NotificationReceived)
-                    |> Maybe.withDefault Cmd.none
-                , Cmd.map SaveMsg cmd
-                ]
-            )
+                ( nextModel
+                , Cmd.batch
+                    [ notification
+                        |> Maybe.map (Cmds.notify NotificationReceived)
+                        |> Maybe.withDefault Cmd.none
+                    , Cmd.map SaveMsg cmd
+                    ]
+                )
 
         NoOp ->
             ( model, Cmd.none )
@@ -425,28 +425,28 @@ initialize flags location =
         model =
             { initialModel | currentRoute = Routing.parse location }
     in
-    handleRouteChanged
-        model.currentRoute
-        ( model
-        , Cmd.batch
-            [ CodeMirror.setup "elmEditor"
-                { vimMode = model.vimMode
-                , theme = "material"
-                , mode = "elm"
-                , initialValue = model.clientRevision.elmCode
-                , readOnly = False
-                , tabSize = 4
-                }
-            , CodeMirror.setup "htmlEditor"
-                { vimMode = model.vimMode
-                , theme = "material"
-                , mode = "htmlmixed"
-                , initialValue = model.clientRevision.htmlCode
-                , readOnly = False
-                , tabSize = 2
-                }
-            ]
-        )
+        handleRouteChanged
+            model.currentRoute
+            ( model
+            , Cmd.batch
+                [ CodeMirror.setup "elmEditor"
+                    { vimMode = model.vimMode
+                    , theme = "material"
+                    , mode = "elm"
+                    , initialValue = model.clientRevision.elmCode
+                    , readOnly = False
+                    , tabSize = 4
+                    }
+                , CodeMirror.setup "htmlEditor"
+                    { vimMode = model.vimMode
+                    , theme = "material"
+                    , mode = "htmlmixed"
+                    , initialValue = model.clientRevision.htmlCode
+                    , readOnly = False
+                    , tabSize = 2
+                    }
+                ]
+            )
 
 
 handleRouteChanged : Route -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
