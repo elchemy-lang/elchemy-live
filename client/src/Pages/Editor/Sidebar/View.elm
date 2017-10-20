@@ -72,7 +72,7 @@ viewSettings config () =
         , div [ Styles.setting ]
             [ Setting.view
                 { label = "Vim Mode"
-                , description = "Use vim keybindings in the editors"
+                , description = "Use vim keybindings in the editors (Ctrl-c to esc)"
                 , control =
                     Checkbox.view
                         { onChange = config.onVimModeChange
