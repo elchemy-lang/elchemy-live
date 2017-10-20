@@ -228,23 +228,27 @@ toIterator config =
         Just Model.Packages ->
             Iterator
                 []
-                (Just <| packagesSection config)
+                Nothing
+                --(Just <| packagesSection config)
                 [ settingsSection config
                 , aboutSection config
                 ]
 
         Just Model.Settings ->
             Iterator
-                [ packagesSection config ]
+                []
+                --packagesSection config ]
                 (Just <| settingsSection config)
                 [ aboutSection config ]
 
         Just Model.About ->
             Iterator
-                [ settingsSection config, packagesSection config ]
+                [ settingsSection config ]
+                --, packagesSection config ]
                 (Just <| aboutSection config)
                 []
 
         Nothing ->
             Iterator.fromList <|
-                [ packagesSection config, settingsSection config, aboutSection config ]
+                --[ packagesSection config,
+                [ settingsSection config, aboutSection config ]

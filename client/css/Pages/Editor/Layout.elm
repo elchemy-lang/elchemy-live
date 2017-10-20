@@ -26,13 +26,14 @@ sidebar =
         , height (pct 100)
         , position relative
         , zIndex (int 1)
-        , Colors.boxShadow |> .right
+        , Colors.boxShadow
+        , paddingTop (px 10)
         ]
 
 
 header =
     uniqueClass
-        [ height (px 40)
+        [ height (px 70)
         ]
 
 
@@ -60,7 +61,7 @@ mainContainer : UniqueClass
 mainContainer =
     uniqueClass
         [ width (pct 100)
-        , height <| calc (pct 100) minus (px 40)
+        , height <| calc (pct 100) minus (px 70)
         , displayFlex
         , position relative
         , zIndex (int 1)
@@ -102,7 +103,8 @@ editorContainer =
     uniqueClass
         [ height (pct 50)
         , position relative
-        , backgroundColor Colors.darkMediumGray
+        , paddingTop (px 10)
+        , backgroundColor Colors.blueGrey
         , firstChild
             [ borderBottom3 (px 1) solid Colors.darkGray
             ]
@@ -122,7 +124,7 @@ editorContainerCollapse =
 editorContainerFull : UniqueClass
 editorContainerFull =
     uniqueClass
-        [ height <| calc (pct 100) minus (px 40)
+        [ height <| calc (pct 100) minus (px 100)
         ]
 
 

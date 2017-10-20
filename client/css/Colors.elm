@@ -13,6 +13,12 @@ type alias BoxShadow =
     }
 
 
+
+-- boxShadow : Style
+-- boxShadow =
+--     border3 (px 2) solid (hex "#bcc7d2")
+
+
 boxShadow : BoxShadow
 boxShadow =
     { right = boxShadow5 (px 2) zero (px 4) zero <| rgba 0 0 0 0.75
@@ -22,6 +28,11 @@ boxShadow =
     , popout = boxShadow5 zero (px 2) (px 8) (px 2) <| rgba 0 0 0 0.75
     , top = boxShadow5 zero (px -2) (px 4) zero <| rgba 0 0 0 0.75
     }
+
+
+elchemyGradient : BackgroundImage (ListStyle {})
+elchemyGradient =
+    linearGradient2 toRight (stop <| hex "#4e2a8e") (stop <| hex "#60b5cc") []
 
 
 darkMediumGray : Color
@@ -72,3 +83,13 @@ blue =
 red : Color
 red =
     hex "#ec5f67"
+
+
+white : Color
+white =
+    hex "#ffffff"
+
+
+blueGrey : Color
+blueGrey =
+    hex "#2F3541"
