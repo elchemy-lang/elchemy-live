@@ -111,7 +111,9 @@ prependGlue code =
         h
             ++ """
 import Html exposing (Html, text)
-
+"""
+            ++ String.join "\n" t
+            ++ """
 ffi : String -> String -> a
 ffi _ _ = Debug.crash "Can't use ffi in browser"
 
@@ -119,7 +121,6 @@ main : Html msg
 main =
     (text << toString) run
 """
-            ++ String.join "\n" t
 
 
 compile : Model -> Bool -> Cmd msg
