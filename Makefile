@@ -3,10 +3,10 @@ setup:
 	yarn
 
 start-server:
-	dotenv flask run
+	./dotenv flask run
 
 start-client:
-	dotenv yarn watch
+	./dotenv yarn watch
 
 build-compiler:
-	dotenv npm run-script build:make
+	./dotenv npm run-script build:make

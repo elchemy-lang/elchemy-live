@@ -14,12 +14,12 @@ notifications =
         , right zero
         , width (px 400)
         , zIndex (int 10)
-        , padding (px 16)
         , maxHeight (pct 100)
         , overflowY auto
         ]
 
 
+sidebar : UniqueClass
 sidebar =
     uniqueClass
         [ width (px 240)
@@ -31,6 +31,7 @@ sidebar =
         ]
 
 
+header : UniqueClass
 header =
     uniqueClass
         [ height (px 70)
@@ -128,8 +129,8 @@ editorContainerFull =
         ]
 
 
-outputContainer : UniqueClass
-outputContainer =
+outputAndLogsContainer : UniqueClass
+outputAndLogsContainer =
     uniqueClass
         [ width (pct 50)
         , height (pct 100)
@@ -137,6 +138,35 @@ outputContainer =
         , zIndex (int 1)
         , Colors.boxShadow |> .left
         , overflow hidden
+        , displayFlex
+        , flexDirection column
+        ]
+
+
+outputContainer : UniqueClass
+outputContainer =
+    uniqueClass
+        [ height (pct 100)
+        , flexShrink (int 1)
+        , position relative
+        , displayFlex
+        ]
+
+
+logsContainer : UniqueClass
+logsContainer =
+    uniqueClass
+        [ position relative
+        , displayFlex
+        , borderTop3 (px 2) solid Colors.mediumGray
+        ]
+
+
+logsContainerCollapsed : UniqueClass
+logsContainerCollapsed =
+    uniqueClass
+        [ height (px 40)
+        , flexShrink (int 0)
         ]
 
 
@@ -161,8 +191,8 @@ outputResizeHandle =
         ]
 
 
-editorResizeHandle : UniqueClass
-editorResizeHandle =
+verticalResizeHandle : UniqueClass
+verticalResizeHandle =
     uniqueClass
         [ position absolute
         , height (px 6)

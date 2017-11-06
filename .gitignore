@@ -10,3 +10,4 @@ npm-debug.log
 env/
 .packages_index/
 .vscode
+.*~
