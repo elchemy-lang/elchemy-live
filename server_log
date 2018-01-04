@@ -1,0 +1,3 @@
+./dotenv flask run
+ * Serving Flask app "server.server"
+ * Forcing debug mode on

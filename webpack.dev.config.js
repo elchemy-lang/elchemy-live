@@ -13,13 +13,13 @@ module.exports = {
   },
 
   entry: {
-    editor: ['es6-promise/auto', generatedElmCss, 'webpack-dev-server/client?http://localhost:8000/', path.join(__dirname, 'client/src/Pages/Editor/index.js')],
-    embed: ['es6-promise/auto', generatedElmCss, 'webpack-dev-server/client?http://localhost:8000/', path.join(__dirname, 'client/src/Pages/Embed/index.js')]
+    editor: ['es6-promise/auto', generatedElmCss, 'webpack-dev-server/client?http://0.0.0.0:8000/', path.join(__dirname, 'client/src/Pages/Editor/index.js')],
+    embed: ['es6-promise/auto', generatedElmCss, 'webpack-dev-server/client?http://0.0.0.0:8000/', path.join(__dirname, 'client/src/Pages/Embed/index.js')]
   },
 
   output: {
     path: path.resolve(__dirname + '/dist'),
-    publicPath: 'http://localhost:8000/',
+    publicPath: 'http://0.0.0.0:8000/',
     filename: '[name].js',
   },
 
