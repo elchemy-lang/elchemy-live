@@ -11,3 +11,4 @@ env/
 .packages_index/
 .vscode
 .*~
+.secretenv
