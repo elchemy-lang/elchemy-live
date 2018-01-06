@@ -1,1 +1,1 @@
-env $(cat .env | xargs) $*
+env $(cat .env .secretenv | xargs) $*

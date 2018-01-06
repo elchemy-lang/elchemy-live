@@ -23,7 +23,7 @@ module.exports = {
     path: path.resolve(__dirname + '/build'),
     filename: '[name].[chunkhash:8].js',
     chunkFilename: 'chunk.[name].[chunkhash:8].js',
-    publicPath: process.env.CDN_BASE + '/assets/'
+    publicPath: '/assets/'
   },
 
   resolve: {
@@ -70,7 +70,7 @@ module.exports = {
         loaders:  [
           StringReplacePlugin.replace({
             replacements: [
-              { pattern: /\%CDN_BASE\%/g, replacement: () => process.env.CDN_BASE },
+              { pattern: /\%CDN_BASE\%/g, replacement: () => ''},
               { pattern: /\%SERVER_ORIGIN\%/g, replacement: () => process.env.SERVER_HOSTNAME },
               { pattern: /\%CARBON_ZONE_ID\%/g, replacement: () => process.env.CARBON_ZONE_ID },
               { pattern: /\%CARBON_SERVE\%/g, replacement: () => process.env.CARBON_SERVE },
@@ -88,7 +88,7 @@ module.exports = {
     new webpack.HashedModuleIdsPlugin(),
     new webpack.DefinePlugin({
       SERVER_ORIGIN: JSON.stringify(process.env.SERVER_HOSTNAME),
-      CDN_BASE: JSON.stringify(process.env.CDN_BASE),
+      CDN_BASE: '',
       OPBEAT_APP_ID: JSON.stringify(process.env.OPBEAT_FRONTEND_APP_ID),
       OPBEAT_ORGANIZATION_ID: JSON.stringify(process.env.OPBEAT_ORGANIZATION_ID),
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),

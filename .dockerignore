@@ -3,9 +3,6 @@ node_modules/
 elm-stuff/
 .DS_Store
 .secretenv
-build/
-client_log
-server_log
 *.pyc
 __pycache__/
 npm-debug.log
@@ -13,4 +10,4 @@ env/
 .packages_index/
 .vscode
 .*~
-.secretenv
+client/elm-stuff/generated-code
