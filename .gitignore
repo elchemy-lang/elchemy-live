@@ -4,6 +4,8 @@ elm-stuff/
 .DS_Store
 .secretenv
 build/
+client_log
+server_log
 *.pyc
 __pycache__/
 npm-debug.log
