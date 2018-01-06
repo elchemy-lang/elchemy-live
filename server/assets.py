@@ -8,20 +8,18 @@ _PRODUCTION = os.environ['ENV'] != 'development'
 with open('./build/manifest.json') as file_data:
     _manifest = json.load(file_data)
 
-
-def _prod_asset_path(relative: str) -> str:
+def is_my_asset(relative: str) -> bool:
     if relative in _manifest:
-        return _CDN_BASE + '/assets/' + _manifest[relative]
+        return True
     else:
-        return ''
+        return False
 
-
-def _dev_asset_path(relative: str) -> str:
-    return 'http://localhost:8000/' + relative
-
+def true_asset(rel: str) -> str:
+    return _manifest[rel]
 
 def asset_path(relative: str) -> str:
-    if _PRODUCTION:
-        return _prod_asset_path(relative)
+    if relative in _manifest:
+        return '/assets/' + _manifest[relative]
     else:
-        return _dev_asset_path(relative)
+        return 'kurwa'
+
