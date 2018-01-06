@@ -13,6 +13,7 @@ import Extra.Markdown as Markdown
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
 import Json.Encode as Encode exposing (Value)
+import Regex
 
 
 toLinterMessage : Error -> LinterMessage
@@ -21,17 +22,17 @@ toLinterMessage error =
         region =
             Maybe.withDefault error.region error.subregion
     in
-    { from = { line = region.start.line - 1, column = region.start.column - 1 }
-    , to = { line = region.end.line - 1, column = region.end.column - 1 }
-    , message = Markdown.toString <| error.overview ++ "\n\n" ++ error.details
-    , severity =
-        case error.level of
-            "warning" ->
-                LinterMessage.Warning
+        { from = { line = region.start.line - 1, column = region.start.column - 1 }
+        , to = { line = region.end.line - 1, column = region.end.column - 1 }
+        , message = Markdown.toString <| error.overview ++ "\n\n" ++ error.details
+        , severity =
+            case error.level of
+                "warning" ->
+                    LinterMessage.Warning
 
-            _ ->
-                LinterMessage.Error
-    }
+                _ ->
+                    LinterMessage.Error
+        }
 
 
 type alias Location =
@@ -91,10 +92,15 @@ decoder =
     Decode.succeed Error
         |> Decode.required "tag" Decode.string
         |> Decode.required "overview" Decode.string
-        |> Decode.required "details" Decode.string
+        |> Decode.required "details" (Decode.map (Debug.log "wah" >> replaceElm) Decode.string)
         |> Decode.optional "subregion" (Decode.map Just decodeRegion) Nothing
         |> Decode.required "region" decodeRegion
         |> Decode.required "type" Decode.string
+
+
+replaceElm : String -> String
+replaceElm =
+    Regex.replace Regex.All (Regex.regex "(^|\n).*elm.*($|\n)") (\matchRegex -> "")
 
 
 encoder : Error -> Value

@@ -79,7 +79,7 @@ viewCompiling complete total =
 
         label =
             if total == 1 then
-                div [ Styles.detailsSubMessage ] [ text "Compiling Elm code" ]
+                div [ Styles.detailsSubMessage ] [ text "Compiling Elchemy code" ]
             else
                 div [ Styles.detailsSubMessage ]
                     [ text <| toString complete ++ " / " ++ toString total ++ " Modules Compiled" ]
@@ -89,13 +89,13 @@ viewCompiling complete total =
                 div [ Styles.detailsExtraNotice ]
                     [ text "We're compiling some modules for the first time. It may take a while but it'll be fast next time!" ]
     in
-    [ div [ Styles.details ]
-        [ div [ Styles.detailsTitle ] [ text "Compiling" ]
-        , label
-        , progressBar
-        , notice
+        [ div [ Styles.details ]
+            [ div [ Styles.detailsTitle ] [ text "Compiling" ]
+            , label
+            , progressBar
+            , notice
+            ]
         ]
-    ]
 
 
 viewGenerating : List (Html msg)
