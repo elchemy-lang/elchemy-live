@@ -28,7 +28,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'Make/0.18.0$': path.resolve(__dirname, 'make/0.18.0/build/Make0180.js')
+      'Make/0.18.0$': path.resolve(__dirname, 'make/0.18.0/build/bundle.js')
     }
   },
 
@@ -42,7 +42,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules|make)/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -78,7 +78,23 @@ module.exports = {
               { pattern: /\%ENV\%/g, replacement: () => process.env.ENV },
             ]
           }),
-          `elm-webpack-loader?yes&cwd=${path.join(__dirname, 'client')}`,
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [ 'env', { 'targets': { 'uglify': true } } ]
+              ],
+              plugins: ['elm-pre-minify']
+            },
+          },
+          {
+            loader: 'elm-webpack-loader',
+            options: {
+              yes: true,
+              debug: false,
+              cwd: path.join(__dirname, 'client'),
+            }
+          }
         ]
       },
     ]
@@ -95,20 +111,8 @@ module.exports = {
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true,
-        warnings: false,
-        dead_code: true,
-        pure_funcs: ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', '_elm_lang$core$Native_Utils.update', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9'],
-        passes: 2
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
-      }
+      compress: true,
+      mangle: true,
     }),
     new ManifestPlugin(),
     new StringReplacePlugin(),
