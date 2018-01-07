@@ -1,3 +1,9 @@
+all:
+	make setup
+	make build-compiler
+	yarn elm-css
+	./dotenv yarn build:production
+
 setup:
 	python3 -m venv ./env && . env/bin/activate && pip3 install -r requirements.txt
 	yarn
