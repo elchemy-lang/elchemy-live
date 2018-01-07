@@ -16,7 +16,7 @@ from flask import (Flask, jsonify, redirect, render_template, request, session,
 from opbeat.contrib.flask import Opbeat
 from werkzeug.routing import BaseConverter, HTTPException, ValidationError
 
-from . import assets, constants, package_search, storage
+from . import assets, constants, storage
 from .classes import (ApiError, Constraint, Package, PackageInfo, PackageName,
                       ProjectId, Version)
 
@@ -81,11 +81,11 @@ def handle_default_error(error: Exception) -> Any:
     raise error
 
 
-def parse_int(string: str) -> Optional[int]:
-    try:
-        return int(string)
-    except:
-        return None
+# def parse_int(string: str) -> Optional[int]:
+#     try:
+#         return int(string)
+#     except:
+#         return None
 
 
 # @app.route('/api/terms/<int(min=0):terms_version>/accept', methods=['POST'])
@@ -98,15 +98,15 @@ def parse_int(string: str) -> Optional[int]:
 #     return jsonify({})
 
 
-@app.route('/api/packages/<string:user>/<string:project>/versions')
-def tags(user: str, project: str) -> Any:
-    cache_data = storage.get_searchable_packages()
-    key = PackageName(user, project)
+# @app.route('/api/packages/<string:user>/<string:project>/versions')
+# def tags(user: str, project: str) -> Any:
+#     cache_data = storage.get_searchable_packages()
+#     key = PackageName(user, project)
 
-    if key not in cache_data:
-        raise ApiError(404, 'Package not found')
+#     if key not in cache_data:
+#         raise ApiError(404, 'Package not found')
 
-    return jsonify([v.to_json() for v in cache_data[key].versions])
+#     return jsonify([v.to_json() for v in cache_data[key].versions])
 
 
 # @app.route('/api/search')
@@ -206,16 +206,16 @@ run =
     })
 
 
-@app.route('/api/revisions/<project_id:project_id>/<int(min=0):revision_number>')
-def get_revision(project_id: ProjectId, revision_number: int) -> Any:
-    revision = storage.get_revision(project_id, revision_number)
-    if revision is None:
-        raise ApiError(404, 'revision not found')
-    return jsonify(revision.to_json())
+# @app.route('/api/revisions/<project_id:project_id>/<int(min=0):revision_number>')
+# def get_revision(project_id: ProjectId, revision_number: int) -> Any:
+#     revision = storage.get_revision(project_id, revision_number)
+#     if revision is None:
+#         raise ApiError(404, 'revision not found')
+#     return jsonify(revision.to_json())
 
 
-def remove_ansi_colors(input: str) -> str:
-    return re.sub(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]', '', input)
+# def remove_ansi_colors(input: str) -> str:
+#     return re.sub(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]', '', input)
 
 
 # @app.route('/api/format', methods=['POST'])
@@ -276,37 +276,37 @@ def send_assets(path):
         return send_from_directory('../build', path)
 
 
-@app.route('/<project_id:project_id>/<int(min=0):revision_number>')
-def existing(project_id: ProjectId, revision_number: int) -> Any:
-    if project_id.is_old:
-        url = url_for('existing', project_id=project_id,
-                      revision_number=revision_number)
-        return redirect(url, code=301)
+# @app.route('/<project_id:project_id>/<int(min=0):revision_number>')
+# def existing(project_id: ProjectId, revision_number: int) -> Any:
+#     if project_id.is_old:
+#         url = url_for('existing', project_id=project_id,
+#                       revision_number=revision_number)
+#         return redirect(url, code=301)
 
-    revision = storage.get_revision(project_id, revision_number)
-    if revision is None:
-        return redirect('new', code=303)
+#     revision = storage.get_revision(project_id, revision_number)
+#     if revision is None:
+#         return redirect('new', code=303)
 
-    data = {
-        'accepted_terms_version': session.get('v1', {}).get('accepted_terms_version'),
-        'title': revision.title,
-        'description': revision.description,
-        'url': EDITOR_CONSTANTS['SERVER_HOSTNAME'] + '/' + str(project_id) + '/' + str(revision_number)
-    }
+#     data = {
+#         'accepted_terms_version': session.get('v1', {}).get('accepted_terms_version'),
+#         'title': revision.title,
+#         'description': revision.description,
+#         'url': EDITOR_CONSTANTS['SERVER_HOSTNAME'] + '/' + str(project_id) + '/' + str(revision_number)
+#     }
 
-    return render_template('existing.html', constants=EDITOR_CONSTANTS, data=data)
+#     return render_template('existing.html', constants=EDITOR_CONSTANTS, data=data)
 
 
-EMBED_CONSTANTS = {
-    'ENV': os.environ['ENV'],
-    'APP_JS': assets.asset_path('embed.js'),
-    'APP_CSS': assets.asset_path('embed.css'),
-    #'GTM_ID': os.environ['GTM_ID'],
-    'PROFILE_PIC': 'idk.jpg',
-    'CDN_BASE': os.environ['CDN_BASE'],
-    'SERVER_HOSTNAME': os.environ['SERVER_HOSTNAME'],
-    'LATEST_TERMS_VERSION': constants.LATEST_TERMS_VERSION
-}
+# EMBED_CONSTANTS = {
+#     'ENV': os.environ['ENV'],
+#     'APP_JS': assets.asset_path('embed.js'),
+#     'APP_CSS': assets.asset_path('embed.css'),
+#     #'GTM_ID': os.environ['GTM_ID'],
+#     'PROFILE_PIC': 'idk.jpg',
+#     'CDN_BASE': os.environ['CDN_BASE'],
+#     'SERVER_HOSTNAME': os.environ['SERVER_HOSTNAME'],
+#     'LATEST_TERMS_VERSION': constants.LATEST_TERMS_VERSION
+# }
 
 
 # @app.route('/a/terms/<int(min=1):terms_version>')
