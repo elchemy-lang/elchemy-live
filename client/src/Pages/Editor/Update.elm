@@ -60,11 +60,11 @@ boolToMaybe bool =
 
 
 clamp : comparable -> comparable -> comparable -> comparable
-clamp minimum maximum current =
-    if current >= maximum then
-        maximum
-    else if current <= minimum then
-        minimum
+clamp min max current =
+    if current >= max then
+        max
+    else if current <= min then
+        min
     else
         current
 
