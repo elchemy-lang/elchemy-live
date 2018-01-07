@@ -35,6 +35,10 @@
   color: #D1BC92 !important;
 }
 
+.CodeMirror .cm-tag {
+  color: #dee2e3;
+}
+
 .CodeMirror .CodeMirror-linenumber {
   color: #606671 !important;
   opacity: 0.6;
