@@ -125,7 +125,7 @@ editorContainerCollapse =
 editorContainerFull : UniqueClass
 editorContainerFull =
     uniqueClass
-        [ height <| calc (pct 100) minus (px 100)
+        [ height <| calc (pct 100) minus (px 40)
         ]
 
 

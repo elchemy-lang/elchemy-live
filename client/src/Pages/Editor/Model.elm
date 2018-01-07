@@ -57,6 +57,7 @@ type alias Model =
     , header : Header.Model
     , logs : Logs.Model
     , termsShown : Bool
+    , elixirCode : String
     }
 
 
@@ -84,6 +85,7 @@ model flags =
     , header = Header.init
     , logs = Logs.default
     , termsShown = False
+    , elixirCode = ""
     }
 
 
@@ -117,7 +119,7 @@ canCompile model =
                 _ ->
                     False
     in
-    stagePasses && SaveState.canSave model.saveState
+        stagePasses && SaveState.canSave model.saveState
 
 
 resetToNew : Model -> Model
@@ -143,9 +145,9 @@ canSave model =
             (model.stagedElmCode /= model.clientRevision.elmCode)
                 || (model.stagedHtmlCode /= model.clientRevision.htmlCode)
     in
-    (stagedCodeChanged || isRevisionChanged model || not (isSavedProject model))
-        && SaveState.canSave model.saveState
-        && model.isOnline
+        (stagedCodeChanged || isRevisionChanged model || not (isSavedProject model))
+            && SaveState.canSave model.saveState
+            && model.isOnline
 
 
 isRevisionChanged : Model -> Bool

@@ -5,7 +5,7 @@ import Window exposing (Size)
 
 type EditorCollapse
     = BothOpen
-    | JustHtmlOpen
+    | JustElixirOpen
     | JustElmOpen
 
 
@@ -30,7 +30,7 @@ type alias Model =
 init : Size -> Model
 init windowSize =
     { resultSplit = 0.5
-    , editorSplit = 0.7
+    , editorSplit = 0.5
     , editorCollapse = BothOpen
     , windowSize = windowSize
     , logsCollapsed = True
@@ -51,4 +51,4 @@ htmlIsHidden model =
 
 elmIsHidden : Model -> Bool
 elmIsHidden model =
-    model.editorCollapse == JustHtmlOpen
+    model.editorCollapse == JustElixirOpen

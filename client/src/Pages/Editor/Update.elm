@@ -31,6 +31,8 @@ import Process
 import RemoteData exposing (RemoteData(..))
 import Task
 import Time exposing (Time)
+import Native.Hacks
+import Compiler as Elchemy
 
 
 when : (m -> Bool) -> (m -> m) -> m -> m
@@ -335,11 +337,17 @@ update msg model =
                 Cmd.none
             )
 
-        ElmCodeChanged code ->
-            ( model
-                |> (\m -> { m | stagedElmCode = code })
-            , Cmd.none
-            )
+        ElmCodeChanged elmCode ->
+            let
+                elixirCode =
+                    compileElchemy elmCode
+            in
+                ( { model
+                    | stagedElmCode = elmCode
+                    , elixirCode = elixirCode
+                  }
+                , CodeMirror.updateValue "elixirEditor" elixirCode
+                )
 
         HtmlCodeChanged code ->
             ( model
@@ -360,16 +368,16 @@ update msg model =
                 ]
             )
 
-        FormattingCompleted (Ok code) ->
+        FormattingCompleted (Ok elmCode) ->
             ( { model
-                | stagedElmCode = code
+                | stagedElmCode = elmCode
                 , previousElmCode =
                     if model.previousElmCode == model.stagedElmCode then
-                        code
+                        elmCode
                     else
                         model.previousElmCode
               }
-            , CodeMirror.updateValue "elmEditor" code
+            , CodeMirror.updateValue "elmEditor" elmCode
             )
 
         FormattingCompleted (Err apiError) ->
@@ -423,6 +431,20 @@ onRouteChange =
     Routing.parse >> RouteChanged
 
 
+compileElchemy : String -> String
+compileElchemy elm =
+    case Native.Hacks.tryCatch Elchemy.tree elm of
+        Ok elixir ->
+            elixir
+
+        Err elchemyError ->
+            elchemyError
+                |> String.split "\n"
+                |> List.map (\a -> "# " ++ a)
+                |> String.join "\n"
+                |> (++) "# Error during compilation\n\n"
+
+
 initialize : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 initialize flags location =
     let
@@ -444,12 +466,12 @@ initialize flags location =
                     , readOnly = False
                     , tabSize = 4
                     }
-                , CodeMirror.setup "htmlEditor"
+                , CodeMirror.setup "elixirEditor"
                     { vimMode = model.vimMode
                     , theme = "material"
-                    , mode = "htmlmixed"
-                    , initialValue = model.clientRevision.htmlCode
-                    , readOnly = False
+                    , mode = "ruby"
+                    , initialValue = ""
+                    , readOnly = True
                     , tabSize = 2
                     }
                 ]
