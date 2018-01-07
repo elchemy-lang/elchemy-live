@@ -24,7 +24,10 @@ import Pages.Editor.Layout.Update as Layout
 import Pages.Editor.Logs.Update as Logs
 import Pages.Editor.Model as Model exposing (Model)
 import Pages.Editor.Routing as Routing exposing (Route(..))
-import Pages.Editor.Save.Update as Save
+
+
+-- import Pages.Editor.Save.Update as Save
+
 import Pages.Editor.Sidebar.Model as Sidebar
 import Pages.Editor.Sidebar.Update as Sidebar
 import Process
@@ -80,10 +83,10 @@ type Msg
     | LoadRevisionCompleted (Result ApiError Revision)
     | CompileRequested
     | CompileStageChanged CompileStage
-    | CompileForSaveStarted Int
+      -- | CompileForSaveStarted Int
     | OnlineChanged Bool
-    | FormattingRequested
-    | FormattingCompleted (Result ApiError String)
+      -- | FormattingRequested
+      -- | FormattingCompleted (Result ApiError String)
     | NotificationReceived Notification
     | ClearStaleNotifications Time
     | ClearAllNotifications
@@ -104,7 +107,7 @@ type Msg
       -- Error Handling
     | ReportException Opbeat.Exception
       -- Nested Stuff
-    | SaveMsg Save.Msg
+      -- | SaveMsg Save.Msg
     | KeyComboMsg KeyCombo.Msg
     | HeaderMsg Header.Msg
     | SidebarMsg Sidebar.Msg
@@ -323,18 +326,17 @@ update msg model =
                     CodeMirror.updateLinter "elmEditor" []
             )
 
-        CompileForSaveStarted totalModules ->
-            ( model
-            , if totalModules >= 5 then
-                Cmds.notify NotificationReceived
-                    { level = Notification.Info
-                    , title = "Saving may take a while"
-                    , message = "It looks like there are a lot of modules to compile. Please wait a moment while I build everything and save it!"
-                    }
-              else
-                Cmd.none
-            )
-
+        -- CompileForSaveStarted totalModules ->
+        --     ( model
+        --     , if totalModules >= 5 then
+        --         Cmds.notify NotificationReceived
+        --             { level = Notification.Info
+        --             , title = "Saving may take a while"
+        --             , message = "It looks like there are a lot of modules to compile. Please wait a moment while I build everything and save it!"
+        --             }
+        --       else
+        --         Cmd.none
+        --     )
         ElmCodeChanged code ->
             ( model
                 |> (\m -> { m | stagedElmCode = code })
@@ -352,47 +354,44 @@ update msg model =
             , onlineNotification isOnline
             )
 
-        FormattingRequested ->
-            ( model
-            , Cmd.batch
-                [ Api.format model.stagedElmCode
-                    |> Api.send FormattingCompleted
-                ]
-            )
-
-        FormattingCompleted (Ok code) ->
-            ( { model
-                | stagedElmCode = code
-                , previousElmCode =
-                    if model.previousElmCode == model.stagedElmCode then
-                        code
-                    else
-                        model.previousElmCode
-              }
-            , CodeMirror.updateValue "elmEditor" code
-            )
-
-        FormattingCompleted (Err apiError) ->
-            ( model
-            , Cmd.batch
-                [ Cmds.notify NotificationReceived
-                    { level = Notification.Error
-                    , title = "Formatting Your Code Failed"
-                    , message = "Elchemy couldn't format your code. Here's what the server said:\n" ++ apiError.explanation
-                    }
-                , if apiError.statusCode == 500 then
-                    Opbeat.capture
-                        { tag = "FORMAT_ERROR"
-                        , message = apiError.explanation
-                        , moduleName = "Pages.Editor.Update"
-                        , line = 480
-                        , extraData = [ ( "input", model.stagedElmCode ) ]
-                        }
-                  else
-                    Cmd.none
-                ]
-            )
-
+        -- FormattingRequested ->
+        --     ( model
+        --     , Cmd.batch
+        --         [ Api.format model.stagedElmCode
+        --             |> Api.send FormattingCompleted
+        --         ]
+        --     )
+        -- FormattingCompleted (Ok code) ->
+        --     ( { model
+        --         | stagedElmCode = code
+        --         , previousElmCode =
+        --             if model.previousElmCode == model.stagedElmCode then
+        --                 code
+        --             else
+        --                 model.previousElmCode
+        --       }
+        --     , CodeMirror.updateValue "elmEditor" code
+        --     )
+        -- FormattingCompleted (Err apiError) ->
+        --     ( model
+        --     , Cmd.batch
+        --         [ Cmds.notify NotificationReceived
+        --             { level = Notification.Error
+        --             , title = "Formatting Your Code Failed"
+        --             , message = "Elchemy couldn't format your code. Here's what the server said:\n" ++ apiError.explanation
+        --             }
+        --         , if apiError.statusCode == 500 then
+        --             Opbeat.capture
+        --                 { tag = "FORMAT_ERROR"
+        --                 , message = apiError.explanation
+        --                 , moduleName = "Pages.Editor.Update"
+        --                 , line = 480
+        --                 , extraData = [ ( "input", model.stagedElmCode ) ]
+        --                 }
+        --           else
+        --             Cmd.none
+        --         ]
+        --     )
         RemovePackageRequested package ->
             ( { model | packagesChanged = True }
                 |> Model.updateClientRevision
@@ -400,20 +399,19 @@ update msg model =
             , Cmd.none
             )
 
-        SaveMsg saveMsg ->
-            let
-                ( nextModel, notification, cmd ) =
-                    Save.update model saveMsg
-            in
-                ( nextModel
-                , Cmd.batch
-                    [ notification
-                        |> Maybe.map (Cmds.notify NotificationReceived)
-                        |> Maybe.withDefault Cmd.none
-                    , Cmd.map SaveMsg cmd
-                    ]
-                )
-
+        -- SaveMsg saveMsg ->
+        --     let
+        --         ( nextModel, notification, cmd ) =
+        --             Save.update model saveMsg
+        --     in
+        --         ( nextModel
+        --         , Cmd.batch
+        --             [ notification
+        --                 |> Maybe.map (Cmds.notify NotificationReceived)
+        --                 |> Maybe.withDefault Cmd.none
+        --             , Cmd.map SaveMsg cmd
+        --             ]
+        --         )
         NoOp ->
             ( model, Cmd.none )
 

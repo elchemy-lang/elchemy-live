@@ -3,30 +3,35 @@ module Pages.Editor.Sidebar.Update exposing (..)
 import Data.Ellie.ApiError as ApiError exposing (ApiError)
 import Data.Elm.Package as Package exposing (Package)
 import Data.Elm.Package.Version as Version exposing (Version)
-import Ellie.Api as Api
+
+
+-- import Ellie.Api as Api
+
 import Pages.Editor.Sidebar.Model as Model exposing (Model)
 
 
 type Msg
-    = SearchChanged String
-    | ResultsLoaded (Result ApiError (List Package))
+    = ResultsLoaded (Result ApiError (List Package))
     | ChangePanel Model.Panel
+
+
+
+-- | SearchChanged String
 
 
 update : Version -> Msg -> Model -> ( Model, Cmd Msg )
 update version msg model =
     case msg of
-        SearchChanged search ->
-            if String.length search > 1 then
-                ( { model | search = search }
-                , Api.searchPackages version search
-                    |> Api.send ResultsLoaded
-                )
-            else
-                ( { model | search = search, results = [] }
-                , Cmd.none
-                )
-
+        -- SearchChanged search ->
+        --     if String.length search > 1 then
+        --         ( { model | search = search }
+        --         , Api.searchPackages version search
+        --             |> Api.send ResultsLoaded
+        --         )
+        --     else
+        --         ( { model | search = search, results = [] }
+        --         , Cmd.none
+        --         )
         ResultsLoaded result ->
             ( { model | results = Result.withDefault [] result }
             , Cmd.none

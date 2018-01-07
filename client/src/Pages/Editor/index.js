@@ -5,7 +5,7 @@ import fixHtml from './fixHtml'
 import CodeMirrorLoader from '../../Ellie/CodeMirror/Loader'
 import OpbeatRunner from '../../Ellie/Opbeat/Runner'
 import CodeMirrorRunner from '../../Ellie/CodeMirror/Runner'
-import AwsRunner from '../../Ellie/Aws/Runner'
+// import AwsRunner from '../../Ellie/Aws/Runner'
 import IconLoader from '../../Ellie/Ui/Icon/Loader'
 import LogsRunner from '../../Pages/Editor/Logs/Runner'
 import Layout from './Layout'
@@ -45,7 +45,7 @@ CodeMirrorLoader
 
     Layout.start(app)
     CodeMirrorRunner.start(CodeMirror, app)
-    AwsRunner.start(app)
+    // AwsRunner.start(app)
     OpbeatRunner.start(app)
     LogsRunner.start(app)
 
@@ -128,8 +128,8 @@ CodeMirrorLoader
         }
 
         const sendToPort = data => {
-          runForSave ?
-            app.ports.compileForSaveIn.send(data) :
+          // runForSave ?
+            // app.ports.compileForSaveIn.send(data) :
             app.ports.compilerMessagesIn.send(data)
         }
 

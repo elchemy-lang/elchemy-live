@@ -4,22 +4,29 @@ module Ellie.Api
         , createGist
         , defaultRevision
         , exactRevision
-        , format
-        , searchPackages
+          -- , format
+          -- , searchPackages
         , send
         , termsContent
         , toTask
-        , uploadSignatures
+          -- , uploadSignatures
         )
 
-import Data.Aws.UploadSignature as UploadSignature exposing (UploadSignature)
+-- import Data.Aws.UploadSignature as UploadSignature exposing (UploadSignature)
+
 import Data.Ellie.ApiError as ApiError exposing (ApiError)
 import Data.Ellie.Revision as Revision exposing (Revision, Snapshot(..))
 import Data.Ellie.RevisionId as RevisionId exposing (RevisionId)
 import Data.Ellie.TermsVersion as TermsVersion exposing (TermsVersion)
-import Data.Elm.Package as Package exposing (Package)
+
+
+-- import Data.Elm.Package as Package exposing (Package)
+
 import Data.Elm.Package.Description as Description exposing (Description)
-import Data.Elm.Package.Version as Version exposing (Version)
+
+
+-- import Data.Elm.Package.Version as Version exposing (Version)
+
 import Ellie.Constants as Constants
 import Http exposing (Error(..), Expect, Request)
 import Http.Extra as Http
@@ -110,45 +117,6 @@ upgradeError error =
 
 
 
--- SEARCH
-
-
-searchPackages : Version -> String -> RequestBuilder (List Package)
-searchPackages elmVersion searchTerm =
-    get (fullUrl "/search")
-        |> withQueryParams
-            [ ( "query", searchTerm )
-            , ( "elmVersion", Version.toString elmVersion )
-            ]
-        |> withApiHeaders
-        |> withExpect (Http.expectJson (Decode.list Package.decoder))
-
-
-
--- FORMAT
-
-
-formatPayload : String -> Value
-formatPayload source =
-    Encode.object
-        [ ( "source", Encode.string source ) ]
-
-
-formatExpect : Expect String
-formatExpect =
-    Decode.field "result" Decode.string
-        |> Http.expectJson
-
-
-format : String -> RequestBuilder String
-format source =
-    post (fullUrl "/format")
-        |> withApiHeaders
-        |> withJsonBody (formatPayload source)
-        |> withExpect formatExpect
-
-
-
 -- REVISIONS AND PROJECTS
 
 
@@ -221,31 +189,3 @@ acceptTerms termsVersion =
     post (fullUrl <| "/terms/" ++ TermsVersion.toString termsVersion ++ "/accept")
         |> withApiHeaders
         |> withExpect Http.expectNoContent
-
-
-
--- UPLOAD
-
-
-uploadExpect : Expect ( UploadSignature, UploadSignature )
-uploadExpect =
-    Decode.map2 (,)
-        (Decode.field "revision" UploadSignature.decoder)
-        (Decode.field "result" UploadSignature.decoder)
-        |> Http.expectJson
-
-
-uploadSignatures : Revision -> Task ApiError ( UploadSignature, UploadSignature )
-uploadSignatures revision =
-    get (fullUrl "/upload")
-        |> withExpect uploadExpect
-        |> (\builder ->
-                case ( revision.id, revision.owned ) of
-                    ( Just { projectId, revisionNumber }, True ) ->
-                        builder
-                            |> withQueryParams [ ( "projectId", projectId ), ( "revisionNumber", toString (revisionNumber + 1) ) ]
-
-                    _ ->
-                        builder
-           )
-        |> toTask

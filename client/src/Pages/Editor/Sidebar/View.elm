@@ -32,8 +32,9 @@ type alias Config msg =
     , onClearElmStuff : msg
     , onVimModeChange : Bool -> msg
     , installed : List Package
-    , onPackageRemoved : Package -> msg
-    , onPackageAdded : Package -> msg
+
+    -- , onPackageRemoved : Package -> msg
+    -- , onPackageAdded : Package -> msg
     , latestTerms : TermsVersion
     , mapMsg : Msg -> msg
     , model : Model
@@ -110,64 +111,63 @@ settingsSection config =
     }
 
 
-viewPackages : Config msg -> () -> Html msg
-viewPackages config () =
-    div [ Styles.packages ]
-        [ div [ Styles.search ]
-            [ div [ Styles.packagesSectionTitle ]
-                [ if String.length config.model.search > 3 then
-                    text "Searching for…"
-                  else
-                    text "Search for packages"
-                ]
-            , TextInput.view
-                { placeholder = "user/project"
-                , value = config.model.search
-                , clearable = True
-                , icon = Nothing
-                , onChange = SearchChanged >> config.mapMsg
-                }
-            ]
-        , if String.length config.model.search /= 0 then
-            div [] <|
-                (config.model.results
-                    |> List.filter (\( name, _ ) -> not <| List.any (Tuple.first >> (==) name) config.installed)
-                    |> List.map
-                        (\p ->
-                            div [ Styles.package ]
-                                [ PackageView.view
-                                    { package = p
-                                    , action = PackageView.install <| config.onPackageAdded p
-                                    }
-                                ]
-                        )
-                )
-          else
-            div []
-                [ div [ Styles.packagesSectionTitle ]
-                    [ text "Installed Packages" ]
-                , div [] <|
-                    List.map
-                        (\p ->
-                            div [ Styles.package ]
-                                [ PackageView.view
-                                    { package = p
-                                    , action = PackageView.uninstall <| config.onPackageRemoved p
-                                    }
-                                ]
-                        )
-                        config.installed
-                ]
-        ]
 
-
-packagesSection : Config msg -> Sections.Section msg
-packagesSection config =
-    { title = "Packages"
-    , icon = Icon.Package
-    , onSelect = config.mapMsg (ChangePanel Model.Packages)
-    , content = viewPackages config
-    }
+-- viewPackages : Config msg -> () -> Html msg
+-- viewPackages config () =
+--     div [ Styles.packages ]
+--         [ div [ Styles.search ]
+--             [ div [ Styles.packagesSectionTitle ]
+--                 [ if String.length config.model.search > 3 then
+--                     text "Searching for…"
+--                   else
+--                     text "Search for packages"
+--                 ]
+--             , TextInput.view
+--                 { placeholder = "user/project"
+--                 , value = config.model.search
+--                 , clearable = True
+--                 , icon = Nothing
+--                 , onChange = SearchChanged >> config.mapMsg
+--                 }
+--             ]
+--         , if String.length config.model.search /= 0 then
+--             div [] <|
+--                 (config.model.results
+--                     |> List.filter (\( name, _ ) -> not <| List.any (Tuple.first >> (==) name) config.installed)
+--                     |> List.map
+--                         (\p ->
+--                             div [ Styles.package ]
+--                                 [ PackageView.view
+--                                     { package = p
+--                                     , action = PackageView.install <| config.onPackageAdded p
+--                                     }
+--                                 ]
+--                         )
+--                 )
+--           else
+--             div []
+--                 [ div [ Styles.packagesSectionTitle ]
+--                     [ text "Installed Packages" ]
+--                 , div [] <|
+--                     List.map
+--                         (\p ->
+--                             div [ Styles.package ]
+--                                 [ PackageView.view
+--                                     { package = p
+--                                     , action = PackageView.uninstall <| config.onPackageRemoved p
+--                                     }
+--                                 ]
+--                         )
+--                         config.installed
+--                 ]
+--         ]
+-- packagesSection : Config msg -> Sections.Section msg
+-- packagesSection config =
+--     { title = "Packages"
+--     , icon = Icon.Package
+--     , onSelect = config.mapMsg (ChangePanel Model.Packages)
+--     , content = viewPackages config
+--     }
 
 
 viewAbout : Config msg -> () -> Html msg
@@ -193,7 +193,7 @@ viewAbout config () =
         --     , text "."
         --     ]
         , p [ Styles.aboutCopyright ]
-            [ text "© 2017 Elchemy" ]
+            [ text "© 2018 - present Elchemy" ]
         ]
 
 

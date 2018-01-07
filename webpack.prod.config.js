@@ -16,7 +16,6 @@ module.exports = {
 
   entry: {
     editor: ['es6-promise', generatedElmCss, path.join(__dirname, 'client/src/Pages/Editor/index.js')],
-    embed: ['es6-promise', generatedElmCss, path.join(__dirname, 'client/src/Pages/Embed/index.js')],
   },
 
   output: {

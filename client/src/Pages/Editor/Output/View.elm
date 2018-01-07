@@ -32,7 +32,7 @@ viewLoading percentage =
 viewReady : msg -> List (Html msg)
 viewReady onCompile =
     [ div [ Styles.details ]
-        [ div [ Styles.detailsTitle ] [ text "Ready" ]
+        [ div [ Styles.detailsTitle ] [ text "Ready to compile" ]
         , div [ Styles.detailsButton ]
             [ Button.view
                 { size = Button.Medium

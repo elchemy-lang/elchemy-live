@@ -9,7 +9,7 @@ module Pages.Editor.Model
         , hasUnsavedWork
         , isOwnedProject
         , isRevisionChanged
-        , isSavedProject
+          -- , isSavedProject
         , model
         , mustAcceptTerms
         , resetStagedCode
@@ -22,7 +22,10 @@ import Data.Ellie.CompileStage as CompileStage exposing (CompileStage(..))
 import Data.Ellie.KeyCombo as KeyCombo exposing (KeyCombo)
 import Data.Ellie.Notification as Notification exposing (Notification)
 import Data.Ellie.Revision as Revision exposing (Revision)
-import Data.Ellie.SaveState as SaveState exposing (SaveState)
+
+
+-- import Data.Ellie.SaveState as SaveState exposing (SaveState)
+
 import Data.Ellie.TermsVersion as TermsVersion exposing (TermsVersion)
 import Data.Elm.Compiler.Error as CompilerError
 import Pages.Editor.Flags as Flags exposing (Flags)
@@ -43,7 +46,8 @@ type alias Model =
     , previousElmCode : String
     , previousHtmlCode : String
     , compileStage : CompileStage
-    , saveState : SaveState
+
+    -- , saveState : SaveState
     , isOnline : Bool
     , notifications : List Notification
     , vimMode : Bool
@@ -70,7 +74,8 @@ model flags =
     , previousHtmlCode = .htmlCode Revision.empty
     , compileStage = CompileStage.Initial
     , currentRoute = NotFound
-    , saveState = SaveState.Ready
+
+    -- , saveState = SaveState.Ready
     , isOnline = flags.online
     , notifications = []
     , vimMode = flags.vimMode
@@ -117,7 +122,11 @@ canCompile model =
                 _ ->
                     False
     in
-    stagePasses && SaveState.canSave model.saveState
+        stagePasses
+
+
+
+-- && SaveState.canSave model.saveState
 
 
 resetToNew : Model -> Model
@@ -130,7 +139,8 @@ resetToNew model =
         , stagedHtmlCode = .htmlCode Revision.empty
         , previousHtmlCode = .htmlCode Revision.empty
         , compileStage = CompileStage.Initial
-        , saveState = SaveState.Ready
+
+        -- , saveState = SaveState.Ready
         , vimMode = model.vimMode
         , packagesChanged = False
     }
@@ -143,9 +153,9 @@ canSave model =
             (model.stagedElmCode /= model.clientRevision.elmCode)
                 || (model.stagedHtmlCode /= model.clientRevision.htmlCode)
     in
-    (stagedCodeChanged || isRevisionChanged model || not (isSavedProject model))
-        && SaveState.canSave model.saveState
-        && model.isOnline
+        (stagedCodeChanged || isRevisionChanged model || not (isSavedProject model))
+            -- && SaveState.canSave model.saveState
+            && model.isOnline
 
 
 isRevisionChanged : Model -> Bool

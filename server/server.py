@@ -88,14 +88,14 @@ def parse_int(string: str) -> Optional[int]:
         return None
 
 
-@app.route('/api/terms/<int(min=0):terms_version>/accept', methods=['POST'])
-def accept_terms(terms_version: int) -> Any:
-    session.permanent = True
-    if 'v1' not in session:
-        session['v1'] = {}
+# @app.route('/api/terms/<int(min=0):terms_version>/accept', methods=['POST'])
+# def accept_terms(terms_version: int) -> Any:
+#     session.permanent = True
+#     if 'v1' not in session:
+#         session['v1'] = {}
 
-    session['v1']['accepted_terms_version'] = terms_version
-    return jsonify({})
+#     session['v1']['accepted_terms_version'] = terms_version
+#     return jsonify({})
 
 
 @app.route('/api/packages/<string:user>/<string:project>/versions')
@@ -109,63 +109,63 @@ def tags(user: str, project: str) -> Any:
     return jsonify([v.to_json() for v in cache_data[key].versions])
 
 
-@app.route('/api/search')
-def search() -> Any:
-    query = request.args.get('query')
-    if not isinstance(query, str):
-        raise (ApiError(400, 'query field must be a string'))
+# @app.route('/api/search')
+# def search() -> Any:
+#     query = request.args.get('query')
+#     if not isinstance(query, str):
+#         raise (ApiError(400, 'query field must be a string'))
 
-    elm_version = request.args.get('elmVersion')
-    if not isinstance(elm_version, str):
-        raise ApiError(400, 'elm version must be a semver string like 0.18.0')
+#     elm_version = request.args.get('elmVersion')
+#     if not isinstance(elm_version, str):
+#         raise ApiError(400, 'elm version must be a semver string like 0.18.0')
 
-    parsed_elm_version = Version.from_string(elm_version)
-    if parsed_elm_version is None:
-        raise ApiError(400, 'elm version must be a semver string like 0.18.0')
+#     parsed_elm_version = Version.from_string(elm_version)
+#     if parsed_elm_version is None:
+#         raise ApiError(400, 'elm version must be a semver string like 0.18.0')
 
-    packages = package_search.search(parsed_elm_version, query)
+#     packages = package_search.search(parsed_elm_version, query)
 
-    return jsonify([p.to_json() for p in packages])
+#     return jsonify([p.to_json() for p in packages])
 
 
-@app.route('/api/upload')
-def get_upload_urls() -> Any:
-    project_id_string = request.args.get('projectId')
+# @app.route('/api/upload')
+# def get_upload_urls() -> Any:
+#     project_id_string = request.args.get('projectId')
 
-    project_id = ProjectId.from_string(project_id_string) if (
-        project_id_string is not None) else ProjectId.generate()
-    if project_id is None:
-        raise ApiError(400, 'projectId must be a string')
+#     project_id = ProjectId.from_string(project_id_string) if (
+#         project_id_string is not None) else ProjectId.generate()
+#     if project_id is None:
+#         raise ApiError(400, 'projectId must be a string')
 
-    if project_id_string is not None and not storage.revision_exists(project_id, 0):
-        raise ApiError(404, 'revision not found')
+#     if project_id_string is not None and not storage.revision_exists(project_id, 0):
+#         raise ApiError(404, 'revision not found')
 
-    if project_id_string is not None and not storage.project_id_is_owned(project_id):
-        raise ApiError(403, 'you don\'t own this revision')
+#     if project_id_string is not None and not storage.project_id_is_owned(project_id):
+#         raise ApiError(403, 'you don\'t own this revision')
 
-    revision_string = request.args.get('revisionNumber')
-    if project_id_string is not None and revision_string is None:
-        raise ApiError(
-            400, 'revision number must be provided along with project id')
+#     revision_string = request.args.get('revisionNumber')
+#     if project_id_string is not None and revision_string is None:
+#         raise ApiError(
+#             400, 'revision number must be provided along with project id')
 
-    revision_number = parse_int(revision_string) if (revision_string is
-                                                     not None) else 0
-    if revision_number is None:
-        raise ApiError(400, 'revision number must be an integer')
-    if revision_number < 0:
-        raise ApiError(400, 'revision number must be 0 or greater')
+#     revision_number = parse_int(revision_string) if (revision_string is
+#                                                      not None) else 0
+#     if revision_number is None:
+#         raise ApiError(400, 'revision number must be an integer')
+#     if revision_number < 0:
+#         raise ApiError(400, 'revision number must be 0 or greater')
 
-    if storage.revision_exists(project_id, revision_number):
-        raise ApiError(400, 'the revision you wanted to create already exists')
+#     if storage.revision_exists(project_id, revision_number):
+#         raise ApiError(400, 'the revision you wanted to create already exists')
 
-    response = jsonify({
-        'revision': storage.get_revision_upload_signature(project_id, revision_number),
-        'result': storage.get_result_upload_signature(project_id, revision_number)
-    })
+#     response = jsonify({
+#         'revision': storage.get_revision_upload_signature(project_id, revision_number),
+#         'result': storage.get_result_upload_signature(project_id, revision_number)
+#     })
 
-    storage.add_project_id_ownership(project_id, response)
+#     storage.add_project_id_ownership(project_id, response)
 
-    return response
+#     return response
 
 
 @app.route('/api/revisions/default')
@@ -218,31 +218,31 @@ def remove_ansi_colors(input: str) -> str:
     return re.sub(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]', '', input)
 
 
-@app.route('/api/format', methods=['POST'])
-def format() -> Any:
-    data: Dict[str, Any] = request.get_json()
-    maybe_source: Optional[str] = data['source']
+# @app.route('/api/format', methods=['POST'])
+# def format() -> Any:
+#     data: Dict[str, Any] = request.get_json()
+#     maybe_source: Optional[str] = data['source']
 
-    if maybe_source is None:
-        raise ApiError(
-            400, 'source attribute is missing, source must be a string')
+#     if maybe_source is None:
+#         raise ApiError(
+#             400, 'source attribute is missing, source must be a string')
 
-    elm_format_path = os.path.realpath(
-        os.path.dirname(os.path.realpath(__file__)) +
-        '/../node_modules/.bin/elm-format')
-    process_output = subprocess.run(
-        [elm_format_path, '--stdin'],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        input=maybe_source.encode('utf-8'))
+#     elm_format_path = os.path.realpath(
+#         os.path.dirname(os.path.realpath(__file__)) +
+#         '/../node_modules/.bin/elm-format')
+#     process_output = subprocess.run(
+#         [elm_format_path, '--stdin'],
+#         stdout=subprocess.PIPE,
+#         stderr=subprocess.PIPE,
+#         input=maybe_source.encode('utf-8'))
 
-    if process_output.returncode != 0:
-        stderr_as_str = process_output.stderr.decode('utf-8')
-        cleaned_error = remove_ansi_colors(
-            '\n'.join(stderr_as_str.split('\n')[1:]))
-        raise ApiError(400, cleaned_error)
+#     if process_output.returncode != 0:
+#         stderr_as_str = process_output.stderr.decode('utf-8')
+#         cleaned_error = remove_ansi_colors(
+#             '\n'.join(stderr_as_str.split('\n')[1:]))
+#         raise ApiError(400, cleaned_error)
 
-    return jsonify({'result': process_output.stdout.decode('utf-8')})
+#     return jsonify({'result': process_output.stdout.decode('utf-8')})
 
 
 EDITOR_CONSTANTS = {
@@ -309,67 +309,67 @@ EMBED_CONSTANTS = {
 }
 
 
-@app.route('/a/terms/<int(min=1):terms_version>')
-def terms(terms_version: int) -> Any:
-    return render_template('terms/' + str(terms_version) + '.html')
+# @app.route('/a/terms/<int(min=1):terms_version>')
+# def terms(terms_version: int) -> Any:
+#     return render_template('terms/' + str(terms_version) + '.html')
 
 
-@app.route('/embed/<project_id:project_id>/<int(min=0):revision_number>')
-def embed(project_id: ProjectId, revision_number: int) -> Any:
-    if project_id.is_old:
-        url = url_for('embed', project_id=project_id,
-                      revision_number=revision_number)
-        return redirect(url, code=301)
+# @app.route('/embed/<project_id:project_id>/<int(min=0):revision_number>')
+# def embed(project_id: ProjectId, revision_number: int) -> Any:
+#     if project_id.is_old:
+#         url = url_for('embed', project_id=project_id,
+#                       revision_number=revision_number)
+#         return redirect(url, code=301)
 
-    data = {}
-    revision = storage.get_revision(project_id, revision_number)
-    if revision is not None:
-        data['title'] = revision.title
-        data['description'] = revision.description
-        data['url'] = EMBED_CONSTANTS['SERVER_HOSTNAME'] + \
-            '/embed/' + str(project_id) + '/' + str(revision_number)
+#     data = {}
+#     revision = storage.get_revision(project_id, revision_number)
+#     if revision is not None:
+#         data['title'] = revision.title
+#         data['description'] = revision.description
+#         data['url'] = EMBED_CONSTANTS['SERVER_HOSTNAME'] + \
+#             '/embed/' + str(project_id) + '/' + str(revision_number)
 
-    return render_template('embed.html', constants=EMBED_CONSTANTS, data=data)
+#     return render_template('embed.html', constants=EMBED_CONSTANTS, data=data)
 
 
-@app.route('/oembed')
-def oembed() -> Any:
-    url = request.args.get('url')
-    width_param = parse_int(request.args.get('width'))
-    height_param = parse_int(request.args.get('height'))
+# @app.route('/oembed')
+# def oembed() -> Any:
+#     url = request.args.get('url')
+#     width_param = parse_int(request.args.get('width'))
+#     height_param = parse_int(request.args.get('height'))
 
-    width = width_param if width_param is not None else 800
-    height = height_param if height_param is not None else 400
+#     width = width_param if width_param is not None else 800
+#     height = height_param if height_param is not None else 400
 
-    parsed_url = urlparse(url)
-    if not parsed_url.hostname or 'ellie-app.com' not in parsed_url.hostname or not parsed_url.path:
-        raise ApiError(404, 'revision not found')
+#     parsed_url = urlparse(url)
+#     if not parsed_url.hostname or 'ellie-app.com' not in parsed_url.hostname or not parsed_url.path:
+#         raise ApiError(404, 'revision not found')
 
-    split = parsed_url.path.split('/')
-    if len(split) != 3:
-        raise ApiError(404, 'revision not found')
+#     split = parsed_url.path.split('/')
+#     if len(split) != 3:
+#         raise ApiError(404, 'revision not found')
 
-    [_, project_id_str, revision_number_str] = split
+#     [_, project_id_str, revision_number_str] = split
 
-    project_id = ProjectId.from_string(project_id_str)
-    if project_id is None:
-        raise ApiError(404, 'revision not found')
+#     project_id = ProjectId.from_string(project_id_str)
+#     if project_id is None:
+#         raise ApiError(404, 'revision not found')
 
-    revision_number = parse_int(revision_number_str)
-    if revision_number is None:
-        raise ApiError(404, 'revision not found')
+#     revision_number = parse_int(revision_number_str)
+#     if revision_number is None:
+#         raise ApiError(404, 'revision not found')
 
-    revision = storage.get_revision(project_id, revision_number)
-    if revision is None:
-        raise ApiError(404, 'revision not found')
+#     revision = storage.get_revision(project_id, revision_number)
+#     if revision is None:
+#         raise ApiError(404, 'revision not found')
 
-    return jsonify({
-        'width': 'width',
-        'height': 'height',
-        'type': 'rich',
-        'version': '1.0',
-        'title': revision.title,
-        'provider_name': 'ellie-app.com',
-        'provider_url': 'https://ellie-app.com',
-        'html': '<iframe src="' + EDITOR_CONSTANTS['SERVER_HOSTNAME'] + '/embed/' + str(project_id) + '/' + str(revision_number) + '" width=' + str(width) + ' height=' + str(height) + ' frameBorder="0" allowtransparency="true"></iframe>'
-    })
+#     return jsonify({
+#         'width': 'width',
+#         'height': 'height',
+#         'type': 'rich',
+#         'version': '1.0',
+#         'title': revision.title,
+#         'provider_name': 'ellie-app.com',
+#         'provider_url': 'https://ellie-app.com',
+#         'html': '<iframe src="' + EDITOR_CONSTANTS['SERVER_HOSTNAME'] + '/embed/' + str(project_id) + '/' + str(revision_number) + '" width=' + str(width) + ' height=' + str(height) + ' frameBorder="0" allowtransparency="true"></iframe>'
+#     })
