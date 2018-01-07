@@ -1,7 +1,6 @@
 import json
 import os
 
-
 _CDN_BASE = os.environ['CDN_BASE']
 _PRODUCTION = os.environ['ENV'] != 'development'
 
@@ -17,9 +16,17 @@ def is_my_asset(relative: str) -> bool:
 def true_asset(rel: str) -> str:
     return _manifest[rel]
 
-def asset_path(relative: str) -> str:
+def _prod_asset_path(relative: str) -> str:
     if relative in _manifest:
-        return '/assets/' + _manifest[relative]
+        return _CDN_BASE + '/assets/' + _manifest[relative]
     else:
-        return 'kurwa'
+        return ''
 
+def _dev_asset_path(relative: str) -> str:
+    return 'http://localhost:8000/' + relative
+
+def asset_path(relative: str) -> str:
+    if _PRODUCTION:
+        return _prod_asset_path(relative)
+    else:
+        return _dev_asset_path(relative)

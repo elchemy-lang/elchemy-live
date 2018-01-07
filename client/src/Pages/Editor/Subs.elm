@@ -8,8 +8,11 @@ import Keyboard
 import Pages.Editor.Layout.Subscriptions as Layout
 import Pages.Editor.Logs.Subscriptions as Logs
 import Pages.Editor.Model as Model exposing (Model)
-import Pages.Editor.Save.Subscriptions as Save
-import Pages.Editor.Save.Update as Save
+
+
+-- import Pages.Editor.Save.Subscriptions as Save
+-- import Pages.Editor.Save.Update as Save
+
 import Pages.Editor.Update as Update exposing (Msg(..))
 
 
@@ -25,7 +28,8 @@ port jsError : (String -> msg) -> Sub msg
 port compilerMessagesIn : (Value -> msg) -> Sub msg
 
 
-port compileForSaveIn : (Value -> msg) -> Sub msg
+
+-- port compileForSaveIn : (Value -> msg) -> Sub msg
 
 
 keyCombos : Model -> Sub Msg
@@ -50,42 +54,39 @@ compilerMessages =
                 |> Result.map CompileStageChanged
                 |> Result.withDefault NoOp
     in
-    compilerMessagesIn parse
+        compilerMessagesIn parse
 
 
-compileForSave : Sub Msg
-compileForSave =
-    let
-        parse value =
-            let
-                _ =
-                    Debug.log "v" value
-            in
-            Decode.decodeValue CompileStage.decoder value
-                |> Result.map
-                    (\stage ->
-                        case Debug.log "stage" stage of
-                            Compiling { total, complete } ->
-                                if complete == 0 then
-                                    SaveMsg <| Save.CompileStarted total
-                                else
-                                    NoOp
 
-                            Success url ->
-                                SaveMsg <| Save.CompileCompleted (Ok url)
-
-                            FinishedWithErrors errors ->
-                                SaveMsg <| Save.CompileCompleted (Err errors)
-
-                            Failed message ->
-                                SaveMsg <| Save.CompileAborted message
-
-                            _ ->
-                                NoOp
-                    )
-                |> Result.withDefault NoOp
-    in
-    compileForSaveIn parse
+-- compileForSave : Sub Msg
+-- compileForSave =
+--     let
+--         parse value =
+--             let
+--                 _ =
+--                     Debug.log "v" value
+--             in
+--                 Decode.decodeValue CompileStage.decoder value
+--                     |> Result.map
+--                         (\stage ->
+--                             case Debug.log "stage" stage of
+--                                 Compiling { total, complete } ->
+--                                     if complete == 0 then
+--                                         SaveMsg <| Save.CompileStarted total
+--                                     else
+--                                         NoOp
+--                                 Success url ->
+--                                     SaveMsg <| Save.CompileCompleted (Ok url)
+--                                 FinishedWithErrors errors ->
+--                                     SaveMsg <| Save.CompileCompleted (Err errors)
+--                                 Failed message ->
+--                                     SaveMsg <| Save.CompileAborted message
+--                                 _ ->
+--                                     NoOp
+--                         )
+--                     |> Result.withDefault NoOp
+--     in
+--         compileForSaveIn parse
 
 
 clearNotifications : Model -> Sub Msg
@@ -132,11 +133,13 @@ subscriptions model =
         [ online OnlineChanged
         , jsError IframeJsError
         , compilerMessages
-        , compileForSave
+
+        -- , compileForSave
         , keyCombos model
         , clearNotifications model
         , codeMirror
-        , Sub.map SaveMsg Save.subscriptions
+
+        -- , Sub.map SaveMsg Save.subscriptions
         , Sub.map LogsMsg <| Logs.subscriptions model.logs
         , Sub.map LayoutMsg <| Layout.subscriptions model.layout
         ]
