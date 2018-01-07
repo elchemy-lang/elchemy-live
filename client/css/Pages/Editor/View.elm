@@ -53,13 +53,13 @@ elmEditor =
         ]
 
 
-htmlEditor : Snippet
-htmlEditor =
-    id "htmlEditor"
+elixirEditor : Snippet
+elixirEditor =
+    id "elixirEditor"
         [ width (pct 100)
         , height (pct 100)
         , position relative
-        , zIndex (int 1)
+        , zIndex (int 0)
         ]
 
 

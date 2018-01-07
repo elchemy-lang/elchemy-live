@@ -21,7 +21,7 @@ type alias Config msg =
     , model : Model
     , mapMsg : Msg -> msg
     , elmId : String
-    , htmlId : String
+    , elixirId : String
     , logs : Html msg
     }
 
@@ -31,8 +31,8 @@ numberToPercent number =
     toString (number * 100) ++ "%"
 
 
-htmlHeightCss : Model -> String
-htmlHeightCss model =
+elixirHeightCss : Model -> String
+elixirHeightCss model =
     case model.editorCollapse of
         Model.BothOpen ->
             numberToPercent (1 - model.editorSplit)
@@ -94,19 +94,35 @@ viewEditors config =
         ]
         [ div
             [ Styles.editorContainer
-            , Attributes.cond Styles.editorContainerCollapse <| config.model.editorCollapse == Model.JustHtmlOpen
+            , Attributes.cond Styles.editorContainerCollapse <| config.model.editorCollapse == Model.JustElixirOpen
             , Attributes.cond Styles.editorContainerFull <| config.model.editorCollapse == Model.JustElmOpen
-            , style "height" "100%" -- <| elmHeightCss config.model
+            , style "height" <| elmHeightCss config.model
             ]
             [ div
                 [ id config.elmId
-                , Attributes.cond (style "display" "none") <| config.model.editorCollapse == Model.JustHtmlOpen
+                , Attributes.cond (style "display" "none") <| config.model.editorCollapse == Model.JustElixirOpen
                 ]
                 []
             , viewCollapseButton
-                (config.mapMsg <| ToggleEditorCollapse Model.JustHtmlOpen)
-                (config.model.editorCollapse == Model.JustHtmlOpen)
+                (config.mapMsg <| ToggleEditorCollapse Model.JustElixirOpen)
+                (config.model.editorCollapse == Model.JustElixirOpen)
                 "Elchemy"
+            ]
+        , div
+            [ Styles.editorContainer
+            , Attributes.cond Styles.editorContainerCollapse <| config.model.editorCollapse == Model.JustElmOpen
+            , Attributes.cond Styles.editorContainerFull <| config.model.editorCollapse == Model.JustElixirOpen
+            , style "height" <| elmHeightCss config.model
+            ]
+            [ div
+                [ id config.elixirId
+                , Attributes.cond (style "display" "none") <| config.model.editorCollapse == Model.JustElmOpen
+                ]
+                []
+            , viewCollapseButton
+                (config.mapMsg <| ToggleEditorCollapse Model.JustElmOpen)
+                (config.model.editorCollapse == Model.JustElmOpen)
+                "Elixir"
             ]
         ]
 
