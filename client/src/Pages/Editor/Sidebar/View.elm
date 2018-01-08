@@ -179,7 +179,7 @@ viewAbout config () =
             [ text "With Elchemy you can use all of Elm's and Elixir features to test an everyday experience with Elchemy development."
             ]
         , p [ Styles.aboutParagraph ]
-            [ text "Add packages in the sidebar, write a program, work through compiler errors, and share your work with the world."
+            [ text "Write a program, work through compiler errors, and share (TBD) your work with the world."
             ]
         , p [ Styles.aboutParagraph ]
             [ text "All content created with Elchemy online is released under the "
