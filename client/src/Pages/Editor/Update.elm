@@ -22,6 +22,7 @@ import Pages.Editor.Flags as Flags exposing (Flags)
 import Pages.Editor.Header.Update as Header
 import Pages.Editor.Layout.Update as Layout
 import Pages.Editor.Logs.Update as Logs
+import Pages.Editor.LintTips as LintTips
 import Pages.Editor.Model as Model exposing (Model)
 import Pages.Editor.Routing as Routing exposing (Route(..))
 import Pages.Editor.Save.Update as Save
@@ -319,7 +320,8 @@ update msg model =
             , case stage of
                 CompileStage.FinishedWithErrors compilerErrors ->
                     CodeMirror.updateLinter "elmEditor" <|
-                        List.map CompilerError.toLinterMessage compilerErrors
+                        Debug.log "Linter errors" <|
+                            List.map CompilerError.toLinterMessage compilerErrors
 
                 _ ->
                     CodeMirror.updateLinter "elmEditor" []
@@ -346,7 +348,10 @@ update msg model =
                     | stagedElmCode = elmCode
                     , elixirCode = elixirCode
                   }
-                , CodeMirror.updateValue "elixirEditor" elixirCode
+                , Cmd.batch
+                    [ CodeMirror.updateValue "elixirEditor" elixirCode
+                    , CodeMirror.updateLinter "elmEditor" (LintTips.lint elmCode)
+                    ]
                 )
 
         HtmlCodeChanged code ->
