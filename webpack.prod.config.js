@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const StringReplacePlugin = require('string-replace-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const generatedElmCss = path.resolve(__dirname, 'client/elm-stuff/generated-code/rtfeldman/elm-css/output.css')
 
@@ -22,7 +23,7 @@ module.exports = {
     path: path.resolve(__dirname + '/build'),
     filename: '[name].[chunkhash:8].js',
     chunkFilename: 'chunk.[name].[chunkhash:8].js',
-    publicPath: '/assets/'
+    publicPath: '/'
   },
 
   resolve: {
@@ -116,5 +117,16 @@ module.exports = {
     new ManifestPlugin(),
     new StringReplacePlugin(),
     new ExtractTextPlugin('[name].[chunkhash:8].css'),
+    new HtmlWebpackPlugin({
+      template: 'public/index.html',
+      env: {
+        SERVER_HOSTNAME: process.env.SERVER_HOSTNAME,
+        NODE_ENV: process.env.NODE_ENV
+      },
+      const: {
+        LATEST_TERMS_VERSION: 1,
+        PROFILE_PIC: 'idk.jpg'
+      }
+    })
   ]
 }

@@ -16,6 +16,7 @@ import Data.Elm.Package as Package exposing (Package)
 import Data.Elm.Package.Constraint as Constraint exposing (Constraint)
 import Data.Elm.Package.Description as Description exposing (Description)
 import Data.Elm.Package.Version as Version exposing (Version)
+import Data.Elm.Package.Name as Name exposing (Name)
 import Extra.Json.Encode as Encode
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
@@ -52,17 +53,30 @@ type alias Revision =
     }
 
 
+initialElmCode : String
+initialElmCode =
+    """module Main exposing (..)
+
+
+run : String
+run = "Hello, world!"
+"""
+
+
 empty : Revision
 empty =
-    { htmlCode = ""
-    , elmCode = ""
-    , packages = []
+    { htmlCode = "<html><head></head><body><script>var app = Elm.Main.fullscreen()</script></body></html>\n"
+    , elmCode = initialElmCode
+    , packages =
+        [ ( Name "elm-lang" "core", Version 5 1 1 )
+        , ( Name "elm-lang" "html", Version 2 0 0 )
+        ]
     , owned = False
     , id = Nothing
     , title = ""
     , description = ""
     , snapshot = NotSaved
-    , elmVersion = Version 0 0 0
+    , elmVersion = Version 0 18 0
     , acceptedTerms = Nothing
     }
 

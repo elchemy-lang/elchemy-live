@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const StringReplacePlugin = require('string-replace-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const generatedElmCss = path.resolve(
   __dirname,
@@ -28,8 +29,8 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname + '/dist'),
-    publicPath: PUBLIC_PATH,
-    filename: '[name].js'
+    filename: '[name].js',
+    publicPath: '/',
   },
 
   resolve: {
@@ -125,7 +126,18 @@ module.exports = {
       ),
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    new StringReplacePlugin()
+    new StringReplacePlugin(),
+    new HtmlWebpackPlugin({
+      template: 'public/index.html',
+      env: {
+        SERVER_HOSTNAME: process.env.SERVER_HOSTNAME,
+        NODE_ENV: process.env.NODE_ENV
+      },
+      const: {
+        LATEST_TERMS_VERSION: 1,
+        PROFILE_PIC: 'idk.jpg'
+      }
+    })
   ],
 
   devServer: {

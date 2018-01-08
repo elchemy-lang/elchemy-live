@@ -456,39 +456,51 @@ initialize flags location =
 
 handleRouteChanged : Route -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 handleRouteChanged route ( model, cmd ) =
-    ( case route of
-        NotFound ->
-            model
+    let
+        newModel =
+            case route of
+                NotFound ->
+                    model
 
-        NewProject ->
-            Model.resetToNew model
+                NewProject ->
+                    Model.resetToNew model
 
-        SpecificRevision revisionId ->
-            if model.clientRevision.id == Just revisionId then
-                model
-            else
-                { model | serverRevision = Loading, compileStage = CompileStage.Initial }
-    , Cmd.batch
-        [ cmd
-        , Cmds.pathChanged
-        , case route of
-            NotFound ->
-                Navigation.modifyUrl (Routing.construct NewProject)
+                SpecificRevision revisionId ->
+                    if model.clientRevision.id == Just revisionId then
+                        model
+                    else
+                        { model | serverRevision = Loading, compileStage = CompileStage.Initial }
+    in
+        ( newModel
+        , Cmd.batch
+            [ cmd
+            , Cmds.pathChanged
+            , case route of
+                NotFound ->
+                    Navigation.modifyUrl (Routing.construct NewProject)
 
-            NewProject ->
-                Api.defaultRevision |> Api.send LoadRevisionCompleted
+                NewProject ->
+                    Cmd.batch
+                        [ Cmds.notify NotificationReceived
+                            { level = Notification.Success
+                            , title = "Your Project Is Loaded!"
+                            , message = "Elchemy found the project and revision you asked for. It's loaded up and ready to be run."
+                            }
+                        , CodeMirror.updateValue "elmEditor" newModel.clientRevision.elmCode
+                        , CodeMirror.updateValue "htmlEditor" newModel.clientRevision.htmlCode
+                        ]
 
-            SpecificRevision revisionId ->
-                model.clientRevision
-                    |> .id
-                    |> Maybe.map ((/=) revisionId)
-                    |> Maybe.withDefault True
-                    |> boolToMaybe
-                    |> Maybe.map
-                        (\() ->
-                            Api.exactRevision revisionId
-                                |> Api.send LoadRevisionCompleted
-                        )
-                    |> Maybe.withDefault Cmd.none
-        ]
-    )
+                SpecificRevision revisionId ->
+                    model.clientRevision
+                        |> .id
+                        |> Maybe.map ((/=) revisionId)
+                        |> Maybe.withDefault True
+                        |> boolToMaybe
+                        |> Maybe.map
+                            (\() ->
+                                Api.exactRevision revisionId
+                                    |> Api.send LoadRevisionCompleted
+                            )
+                        |> Maybe.withDefault Cmd.none
+            ]
+        )

@@ -98,15 +98,15 @@ def handle_default_error(error: Exception) -> Any:
 #     return jsonify({})
 
 
-# @app.route('/api/packages/<string:user>/<string:project>/versions')
-# def tags(user: str, project: str) -> Any:
-#     cache_data = storage.get_searchable_packages()
-#     key = PackageName(user, project)
+@app.route('/api/packages/<string:user>/<string:project>/versions')
+def tags(user: str, project: str) -> Any:
+    cache_data = storage.get_searchable_packages()
+    key = PackageName(user, project)
 
-#     if key not in cache_data:
-#         raise ApiError(404, 'Package not found')
+    if key not in cache_data:
+        raise ApiError(404, 'Package not found')
 
-#     return jsonify([v.to_json() for v in cache_data[key].versions])
+    return jsonify([v.to_json() for v in cache_data[key].versions])
 
 
 # @app.route('/api/search')
@@ -168,42 +168,30 @@ def handle_default_error(error: Exception) -> Any:
 #     return response
 
 
-@app.route('/api/revisions/default')
-def get_default_revision() -> Any:
-    cache_data = storage.get_searchable_packages()
-    default_html = cache_data[PackageName(
-        'elm-lang', 'html')].latest_by_elm_version[Version(0, 18, 0)]
-    default_core = cache_data[PackageName(
-        'elm-lang', 'core')].latest_by_elm_version[Version(0, 18, 0)]
+# @app.route('/api/revisions/default')
+# def get_default_revision() -> Any:
+#     cache_data = storage.get_searchable_packages()
+#     default_html = cache_data[PackageName(
+#         'elm-lang', 'html')].latest_by_elm_version[Version(0, 18, 0)]
+#     default_core = cache_data[PackageName(
+#         'elm-lang', 'core')].latest_by_elm_version[Version(0, 18, 0)]
 
-    return jsonify({
-        'packages': [default_core.to_json(), default_html.to_json()],
-        'elmVersion': '0.18.0',
-        'title': '',
-        'description': '',
-        'id': None,
-        'elmCode': '''module Main exposing (..)
+#     return jsonify({
+#         'packages': [default_core.to_json(), default_html.to_json()],
+#         'elmVersion': '0.18.0',
+#         'title': '',
+#         'description': '',
+#         'id': None,
+#         'elmCode': '''module Main exposing (..)
 
 
-run : String
-run =
-    "Hello, world!"''',
+# run : String
+# run =
+#     "Hello, world!"''',
 
-        'htmlCode': '''<html>
-<head>
-  <style>
-    /* you can style your program here */
-  </style>
-</head>
-<body>
-  <script>
-    var app = Elm.Main.fullscreen()
-    // you can use ports and stuff here
-  </script>
-</body>
-</html>
-'''
-    })
+#         'htmlCode': '''<html><head></head><body><script>var app = Elm.Main.fullscreen()</script></body></html>
+# '''
+#     })
 
 
 # @app.route('/api/revisions/<project_id:project_id>/<int(min=0):revision_number>')
@@ -269,7 +257,6 @@ def new() -> Any:
 @app.route('/assets/<string:path>')
 def send_assets(path):
     if assets.is_my_asset(path):
-        print("Kurwa nie moje")
         print(assets.true_asset(path))
         return send_from_directory('../build', assets.true_asset(path))
     else:

@@ -22,7 +22,6 @@
     "babel-preset-es2017": "6.24.1",
     "codemirror": "5.27.4",
     "css-loader": "0.28.4",
-    "elm": "0.18.0",
     "elm-css": "0.7.0-beta10",
     "elm-format": "0.7.0-exp",
     "elm-test": "0.18.7",
@@ -60,5 +59,9 @@
     "test:make:0.18.0": "cd ./make/0.18.0 && npm install && npm test",
     "test:make": "npm run test:make:0.18.0",
     "test": "npm run test:make"
+  },
+  "devDependencies": {
+    "elm": "^0.18.0",
+    "html-webpack-plugin": "^2.30.1"
   }
 }

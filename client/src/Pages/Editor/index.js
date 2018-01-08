@@ -29,7 +29,7 @@ CodeMirrorLoader
       }
     })
 
-    const acceptedTermsVersion = JSON.parse(document.querySelector('meta[name=accepted_terms_version]').content)
+    // const acceptedTermsVersion = JSON.parse(document.querySelector('meta[name=accepted_terms_version]').content)
     const latestTermsVersion = JSON.parse(document.querySelector('meta[name=latest_terms_version]').content)
 
     const app = Elm.Pages.Editor.Main.fullscreen({
@@ -39,7 +39,7 @@ CodeMirrorLoader
       },
       online: process.env.NODE_ENV === 'production' ? window.navigator.onLine : true,
       vimMode: localStorage.getItem('Pages.Editor.vimMode') === 'true',
-      acceptedTermsVersion,
+      acceptedTermsVersion: null, // acceptedTermsVersion,
       latestTermsVersion,
     })
 

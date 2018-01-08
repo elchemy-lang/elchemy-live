@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <base href="/" />
+  <link rel="icon" href="/assets/images/favicon.ico" />
+  <% if(htmlWebpackPlugin.options.env.NODE_ENV == "production") { %>
+    <link rel="stylesheet" href="/assets/editor.css" />
+  <% } %>
+  <title>Elchemy Live Editor</title>
+  <meta property="og:image" content="<%= htmlWebpackPlugin.options.const.PROFILE_PIC %>" itemprop="thumbnailUrl" />
+  <meta property="og:title" content="Elchemy live - New Project" />
+  <meta property="og:url" content="<%= htmlWebpackPlugin.options.env.SERVER_HOSTNAME %>/new" />
+  <meta property="og:site_name" content="Elchemy live" />
+  <meta property="og:description" content="Elchemy live puts the Elchemy platform in your browser so you can try, share ideas, and bring your programs to life."
+  />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:url" content="<%= htmlWebpackPlugin.options.env.SERVER_HOSTNAME %>/new" />
+  <meta name="twitter:title" content="Elchemy live - The Elm Live Editor" />
+  <meta name="twitter:description" content="Elchemy live puts the Elchemy platform in your browser so you can try, share ideas, and bring your programs to life."
+  />
+  <meta name="twitter:image" content="<%= htmlWebpackPlugin.options.const.PROFILE_PIC %>" />
+  <meta name="twitter:site" content="@__wende__" />
+  <meta name="accepted_terms_version" content="true" />
+  <meta name="latest_terms_version" content="<%= htmlWebpackPlugin.options.const.LATEST_TERMS_VERSION %>" />
+  <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
+
+  <% if(htmlWebpackPlugin.options.env.NODE_ENV == "production") { %>
+   <script src="<%= htmlWebpackPlugin.files.chunks.editor.entry %>" async></script>
+  <% } %>
+</head>
+
+<body>
+</body>
+
+</html>

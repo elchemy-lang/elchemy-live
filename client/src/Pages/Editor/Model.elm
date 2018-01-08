@@ -66,7 +66,7 @@ type alias Model =
 
 model : Flags -> Model
 model flags =
-    { serverRevision = NotAsked
+    { serverRevision = RemoteData.Success Revision.empty
     , clientRevision = Revision.empty
     , stagedElmCode = .elmCode Revision.empty
     , previousElmCode = .elmCode Revision.empty
@@ -132,7 +132,7 @@ canCompile model =
 resetToNew : Model -> Model
 resetToNew model =
     { model
-        | serverRevision = NotAsked
+        | serverRevision = RemoteData.Success Revision.empty
         , clientRevision = Revision.empty
         , stagedElmCode = .elmCode Revision.empty
         , previousElmCode = .elmCode Revision.empty
