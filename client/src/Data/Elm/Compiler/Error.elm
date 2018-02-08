@@ -22,8 +22,8 @@ toLinterMessage error =
         region =
             Maybe.withDefault error.region error.subregion
     in
-        { from = { line = region.start.line - 1, column = region.start.column - 1 }
-        , to = { line = region.end.line - 1, column = region.end.column - 1 }
+        { from = { line = region.start.line - 2, column = region.start.column - 1 }
+        , to = { line = region.end.line - 2, column = region.end.column - 1 }
         , message = Markdown.toString <| error.overview ++ "\n\n" ++ error.details
         , severity =
             case error.level of
@@ -101,6 +101,7 @@ decoder =
 replaceElm : String -> String
 replaceElm =
     Regex.replace Regex.All (Regex.regex "(^|\n).*elm.*($|\n)") (\matchRegex -> "")
+        >> Regex.replace Regex.All (Regex.regex "\\bElm\\b") (\matchRegex -> "Elchemy")
 
 
 encoder : Error -> Value

@@ -320,8 +320,7 @@ update msg model =
             , case stage of
                 CompileStage.FinishedWithErrors compilerErrors ->
                     CodeMirror.updateLinter "elmEditor" <|
-                        Debug.log "Linter errors" <|
-                            List.map CompilerError.toLinterMessage compilerErrors
+                        List.map CompilerError.toLinterMessage compilerErrors
 
                 _ ->
                     CodeMirror.updateLinter "elmEditor" []

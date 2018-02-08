@@ -13,7 +13,6 @@ rules : List Rule
 rules =
     [ Rule "wende" "Mind the second commandment!"
     , Rule "\\b\\w+_\\w+.*?\\b" "Careful there. Elchemy uses CamelCase, not snake_case"
-    , Rule "\\n(\\s*?)([^ ].*?)=(.*)\\n\\1([^= ][^=\\n]*)\\n" "In Elchemy all functions consist only of one expression. Use\n\nlet\n  @2=@3\nin\n  @4\n\n instead"
     ]
 
 
