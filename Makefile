@@ -10,6 +10,7 @@ setup:
 	cd client && elm-install && cd ../
 
 docker-build:
+	./dotenv yarn build:production
 	docker build . -t elchemy:dev
 
 docker-run:
