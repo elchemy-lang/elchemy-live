@@ -7,6 +7,7 @@ type Panel
     = Settings
     | About
     | Packages
+    | Examples
 
 
 type alias Model =

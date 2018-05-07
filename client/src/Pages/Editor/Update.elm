@@ -34,6 +34,7 @@ import Task
 import Time exposing (Time)
 import Native.Hacks
 import Compiler as Elchemy
+import Data.Examples as Examples
 
 
 when : (m -> Bool) -> (m -> m) -> m -> m
@@ -99,6 +100,7 @@ type Msg
     | CreateGist
     | CreateGistComplete (Result ApiError String)
     | ClearElmStuff
+    | SelectExample Examples.Example
     | ToggleVimMode Bool
     | NoOp
       -- CodeMirror Stuff
@@ -152,6 +154,9 @@ update msg model =
             ( model
             , Opbeat.capture exception
             )
+
+        SelectExample example ->
+            ( model, CodeMirror.updateValue "elmEditor" (Examples.getExample example) )
 
         SidebarMsg sidebarMsg ->
             model.sidebar

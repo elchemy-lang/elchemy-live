@@ -81,6 +81,7 @@ viewSidebar model =
         , installed = model.clientRevision.packages
         , onPackageRemoved = RemovePackageRequested
         , onPackageAdded = PackageSelected
+        , onNewExample = SelectExample
         , latestTerms = model.latestTermsVersion
         , mapMsg = SidebarMsg
         , model = model.sidebar
