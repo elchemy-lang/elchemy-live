@@ -95,7 +95,6 @@ viewHeader revisionId current =
     Html.styled Html.header
         [ height (px 40)
         , backgroundColor Theme.primaryBackground
-        , borderBottom3 (px 2) solid Theme.staticBorder
         , displayFlex
         , alignItems center
         , justifyContent spaceBetween
@@ -192,7 +191,7 @@ viewContent state =
                 viewOverlayed <|
                     CodeEditor.view
                         [ CodeEditor.mode "htmlmixed"
-                        , CodeEditor.value state.revision.data.htmlCode
+                        , CodeEditor.value state.revision.data.elchemyCode
                         , CodeEditor.readOnly
                         ]
 
@@ -253,7 +252,7 @@ viewOutput state =
                     ]
                     []
                     [ Output.view
-                        [ Output.html state.revision.data.htmlCode
+                        [ Output.html state.revision.data.elchemyCode
                         , Output.elmSource <| Url.toString <| Revision.outputLink state.revision.id
                         , Output.onCanDebug CanDebugChanged
                         , Output.debug (state.debug == AppState.Debugging)

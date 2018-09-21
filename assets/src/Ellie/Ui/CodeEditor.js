@@ -53,6 +53,8 @@ const load = () => {
     import(/* webpackChunkName: "codemirror-base" */ 'codemirror/mode/htmlmixed/htmlmixed'),
     import(/* webpackChunkName: "codemirror-base" */ 'codemirror/addon/lint/lint'),
     import(/* webpackChunkName: "codemirror-base" */ 'codemirror/addon/selection/active-line'),
+    import('codemirror-mode-elixir'),
+
     // import(/* webpackChunkName: "codemirror-base" */ 'codemirror/addon/hint/show-hint'),
     // import(/* webpackChunkName: "codemirror-base", webpackMode: "eager" */ 'codemirror/addon/hint/show-hint.css'),
     import(/* webpackChunkName: "codemirror-base", webpackMode: "eager" */ 'codemirror/addon/lint/lint.css'),
@@ -262,7 +264,7 @@ const start = (app) => {
         })
 
         this._instance.on('changes', runDispatch)
-      
+
         if (this._mode === 'elm') this._setupElmEvents()
 
         requestAnimationFrame(() => {

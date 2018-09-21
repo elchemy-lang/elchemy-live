@@ -17,7 +17,6 @@ view current =
             [ displayFlex
             , width (px 60)
             , backgroundColor Theme.primaryBackground
-            , borderRight3 (px 2) solid Theme.staticBorder
             , flexDirection column
             , justifyContent spaceBetween
             , flexShrink (int 0)

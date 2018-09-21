@@ -30,6 +30,7 @@ defmodule Ellie.Repo.Migrations.CreateRevisions do
       add :title,           :string
       add :elm_code,        :text,                           null: false
       add :html_code,       :text,                           null: false
+      add :elchemy_code,    :text,                           null: false
       add :packages,        {:array, Elm.Ecto.Package.type}, null: false
       add :elm_version,     Elm.Ecto.Version.type,           null: false
       add :terms_version,   :integer

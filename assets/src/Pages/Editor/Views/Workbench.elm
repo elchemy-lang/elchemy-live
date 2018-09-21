@@ -292,7 +292,6 @@ viewHeader config actions tabs =
             , justifyContent flexEnd
             , padding2 zero (px 8)
             , overflow hidden
-            , borderBottom3 (px 2) solid Theme.staticBorder
             ]
         ]
         [ Html.button

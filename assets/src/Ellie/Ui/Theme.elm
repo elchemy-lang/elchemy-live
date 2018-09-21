@@ -132,7 +132,7 @@ darkStyles =
         , property "--theme-color-connection-status-disconnected" red.value
         , property "--theme-color-button-border" "#3F3F3F"
         , property "--theme-color-button-background" "#525252"
-        , property "--theme-color-editor-header-background" "#222222"
+        , property "--theme-color-editor-header-background" darkMediumGray.value
         , property "--theme-color-workbench-watermark" "#252525"
         , property "--theme-color-tab-active-border" "#525252"
         , property "--theme-color-tab-foreground" "#DDDDDD"
@@ -161,7 +161,7 @@ lightStyles =
 
 darkMediumGray : Color
 darkMediumGray =
-    hex "292929"
+    hex "#272c35"
 
 
 lightGray : Color

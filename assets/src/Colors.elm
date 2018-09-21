@@ -36,7 +36,7 @@ lightGray =
 
 mediumGray : Color
 mediumGray =
-    hex "#525252"
+    hex "#354051"
 
 
 pink : Color
@@ -46,7 +46,7 @@ pink =
 
 darkGray : Color
 darkGray =
-    hex "#1D1D1D"
+    hex "#272c35"
 
 
 lightMediumGray : Color

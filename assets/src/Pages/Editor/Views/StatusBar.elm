@@ -23,7 +23,6 @@ view config =
         [ css
             [ width (pct 100)
             , height (px 32)
-            , borderTop3 (px 2) solid Theme.staticBorder
             , flexShrink zero
             , justifyContent spaceBetween
             , alignItems center
