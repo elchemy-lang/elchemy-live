@@ -15,13 +15,11 @@ import Ellie.Ui.CopyLink as CopyLink
 import Ellie.Ui.Icon as Icon
 import Ellie.Ui.Popout as Popout
 import Extra.Html as Html
-import Html exposing (Html, a, button, div, h1, header, span, text)
+import Html exposing (Html, a, button, div, h1, header, span, text, img)
 import Html.Attributes exposing (href, tabindex, target, title)
 import Pages.Editor.Header.Model exposing (Model)
 import Pages.Editor.Header.Styles as Styles
 import Pages.Editor.Header.Update exposing (Msg(..))
-import Svg exposing (svg, use)
-import Svg.Attributes exposing (xlinkHref)
 
 
 type SaveOption
@@ -82,8 +80,11 @@ embedLink revisionId =
 
 viewLogo : Html msg
 viewLogo =
-    svg [ Styles.logo ]
-        [ use [ xlinkHref "#ellie-logo" ] [] ]
+    div [ Styles.logo ] [ text "El" ]
+
+
+
+-- a [ Styles.logo, href "" ] []
 
 
 viewSaveButton : Config msg -> Html msg
@@ -181,65 +182,66 @@ viewLeftSide config =
                         , action = Button.click config.onCompile
                         }
                     ]
-                , div [ Styles.button ]
-                    [ viewSaveButton config ]
-                , div [ Styles.button ]
-                    [ Button.view
-                        { style = Button.Link
-                        , size = Button.Medium
-                        , icon = Just Icon.Format
-                        , label = "FORMAT"
-                        , disabled = False
-                        , attributes = []
-                        , action = Button.click config.onFormat
-                        }
-                    ]
-                , div [ Styles.button ]
-                    [ Popout.view
-                        { open = config.model.shareOpen
-                        , disabled = config.revisionId == Nothing
-                        , onToggle = ToggleShare >> config.mapMsg
-                        , tooltip =
-                            config.revisionId
-                                |> Maybe.map
-                                    (\revisionId ->
-                                        div []
-                                            [ div [ Styles.copyLinkContainer ]
-                                                [ CopyLink.view
-                                                    { id = "direct"
-                                                    , url = directLink revisionId
-                                                    , title = "Direct Link (Medium, Embed.ly)"
-                                                    }
-                                                ]
-                                            , div [ Styles.copyLinkContainer ]
-                                                [ CopyLink.view
-                                                    { id = "embed"
-                                                    , url = embedLink revisionId
-                                                    , title = "Embed Link"
-                                                    }
-                                                ]
-                                            , div [ Styles.copyLinkContainer ]
-                                                [ CopyLink.view
-                                                    { id = "iframe"
-                                                    , url = iframe revisionId
-                                                    , title = "IFrame"
-                                                    }
-                                                ]
-                                            ]
-                                    )
-                                |> Html.maybe
-                        , content =
-                            Button.view
-                                { style = Button.Link
-                                , size = Button.Medium
-                                , icon = Just Icon.Link
-                                , label = "SHARE"
-                                , disabled = config.revisionId == Nothing
-                                , attributes = []
-                                , action = Button.none
-                                }
-                        }
-                    ]
+
+                -- , div [ Styles.button ]
+                --     [ viewSaveButton config ]
+                -- , div [ Styles.button ]
+                --     [ Button.view
+                --         { style = Button.Link
+                --         , size = Button.Medium
+                --         , icon = Just Icon.Format
+                --         , label = "FORMAT"
+                --         , disabled = False
+                --         , attributes = []
+                --         , action = Button.click config.onFormat
+                --         }
+                --     ]
+                -- , div [ Styles.button ]
+                --     [ Popout.view
+                --         { open = config.model.shareOpen
+                --         , disabled = config.revisionId == Nothing
+                --         , onToggle = ToggleShare >> config.mapMsg
+                --         , tooltip =
+                --             config.revisionId
+                --                 |> Maybe.map
+                --                     (\revisionId ->
+                --                         div []
+                --                             [ div [ Styles.copyLinkContainer ]
+                --                                 [ CopyLink.view
+                --                                     { id = "direct"
+                --                                     , url = directLink revisionId
+                --                                     , title = "Direct Link (Medium, Embed.ly)"
+                --                                     }
+                --                                 ]
+                --                             , div [ Styles.copyLinkContainer ]
+                --                                 [ CopyLink.view
+                --                                     { id = "embed"
+                --                                     , url = embedLink revisionId
+                --                                     , title = "Embed Link"
+                --                                     }
+                --                                 ]
+                --                             , div [ Styles.copyLinkContainer ]
+                --                                 [ CopyLink.view
+                --                                     { id = "iframe"
+                --                                     , url = iframe revisionId
+                --                                     , title = "IFrame"
+                --                                     }
+                --                                 ]
+                --                             ]
+                --                     )
+                --                 |> Html.maybe
+                --         , content =
+                --             Button.view
+                --                 { style = Button.Link
+                --                 , size = Button.Medium
+                --                 , icon = Just Icon.Link
+                --                 , label = "SHARE"
+                --                 , disabled = config.revisionId == Nothing
+                --                 , attributes = []
+                --                 , action = Button.none
+                --                 }
+                --         }
+                --     ]
                 ]
     else
         [ viewLogo ]
@@ -258,8 +260,10 @@ viewSocialLink url description icon =
 
 viewRightSide : List (Html msg)
 viewRightSide =
-    [ viewSocialLink "https://github.com/lukewestby/ellie" "Repository" Icon.GitHub
-    , viewSocialLink "https://trello.com/b/7cFN60SP/ellie" "Roadmap" Icon.Trello
+    [ viewSocialLink "https://github.com/wende/elchemy" "Repository" Icon.GitHub
+
+    -- , viewSocialLink "https://twitter.com/ellie_editor" "Follow" Icon.Twitter
+    -- , viewSocialLink "https://trello.com/b/7cFN60SP/ellie" "Roadmap" Icon.Trello
     ]
 
 

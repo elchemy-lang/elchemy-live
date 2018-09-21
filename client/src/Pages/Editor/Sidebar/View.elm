@@ -3,8 +3,11 @@ module Pages.Editor.Sidebar.View exposing (..)
 import Data.Ellie.TermsVersion as TermsVersion exposing (TermsVersion)
 import Data.Elm.Package as Package exposing (Package)
 import Data.List.Iterator as Iterator exposing (Iterator(..))
-import Ellie.Constants as Constants
-import Ellie.Ui.Ad as Ad
+
+
+-- import Ellie.Constants as Constants
+-- import Ellie.Ui.Ad as Ad
+
 import Ellie.Ui.Button as Button
 import Ellie.Ui.Checkbox as Checkbox
 import Ellie.Ui.Icon as Icon
@@ -13,11 +16,14 @@ import Ellie.Ui.Sections as Sections
 import Ellie.Ui.Setting as Setting
 import Ellie.Ui.TextArea as TextArea
 import Ellie.Ui.TextInput as TextInput
-import Html exposing (Html, a, div, p, span, text)
+import Html exposing (Html, a, div, p, span, text, button)
+import Html.Events exposing (onClick)
 import Html.Attributes exposing (href)
 import Pages.Editor.Sidebar.Model as Model exposing (Model)
 import Pages.Editor.Sidebar.Styles as Styles
+import Ellie.Ui.Sections.Styles as SectionStyles
 import Pages.Editor.Sidebar.Update exposing (Msg(..))
+import Data.Examples as Examples
 
 
 type alias Config msg =
@@ -31,6 +37,7 @@ type alias Config msg =
     , installed : List Package
     , onPackageRemoved : Package -> msg
     , onPackageAdded : Package -> msg
+    , onNewExample : Examples.Example -> msg
     , latestTerms : TermsVersion
     , mapMsg : Msg -> msg
     , model : Model
@@ -69,7 +76,7 @@ viewSettings config () =
         , div [ Styles.setting ]
             [ Setting.view
                 { label = "Vim Mode"
-                , description = "Use vim keybindings in the editors"
+                , description = "Use vim keybindings in the editors (Ctrl-c to esc)"
                 , control =
                     Checkbox.view
                         { onChange = config.onVimModeChange
@@ -171,27 +178,40 @@ viewAbout : Config msg -> () -> Html msg
 viewAbout config () =
     div [ Styles.about ]
         [ div [ Styles.aboutHeading ]
-            [ text "Ellie is the Elm platform in your browser." ]
+            [ text "Elchemy platform in your browser." ]
         , p [ Styles.aboutParagraph ]
-            [ text "With Ellie you can use all of Elm’s features to build amazing animations, precise SSCCEs, cool demos, and anything else you could create with Elm in an ordinary development environment."
+            [ text "With Elchemy you can use all of Elm's and Elixir features to test an everyday experience with Elchemy development."
             ]
         , p [ Styles.aboutParagraph ]
-            [ text "Add packages in the sidebar, write a program, work through compiler errors, and share your work with the world."
+            [ text "Write a program, work through compiler errors, and share (TBD) your work with the world."
             ]
         , p [ Styles.aboutParagraph ]
-            [ text "All content created with Ellie is released under the "
+            [ text "All content created with Elchemy online is released under the "
             , a [ href "https://opensource.org/licenses/MIT" ] [ text "MIT license" ]
-            , text ". We reserve the right to remove or modify any content created with Ellie for any reason. Report abuse and ask questions at "
-            , a [ href "mailto:ellie-app@lukewestby.com" ] [ text "ellie-app@lukewestby.com" ]
-            , text "."
+            , text ". We reserve the right to remove or modify any content created with Elchemy live for any reason."
             ]
-        , p [ Styles.aboutParagraph ]
-            [ text "Our latest terms of service can be found "
-            , a [ href <| TermsVersion.link config.latestTerms ] [ text "here" ]
-            , text "."
-            ]
+
+        -- , p [ Styles.aboutParagraph ]
+        --     [ text "Our latest terms of service can be found "
+        --     , a [ href <| TermsVersion.link config.latestTerms ] [ text "here" ]
+        --     , text "."
+        --     ]
         , p [ Styles.aboutCopyright ]
-            [ text "© 2017 Luke Westby" ]
+            [ text "© 2017 Elchemy" ]
+        ]
+
+
+viewExamples : Config msg -> () -> Html msg
+viewExamples config () =
+    div [ Styles.about ]
+        [ div [ Styles.packages ]
+            []
+        , div [ SectionStyles.button, onClick <| config.onNewExample Examples.HelloWorld ] [ text "Hello World" ]
+        , div [ SectionStyles.button, onClick <| config.onNewExample Examples.Application ] [ text "Application" ]
+        , div [ SectionStyles.button, onClick <| config.onNewExample Examples.Currying ] [ text "Currying" ]
+        , div [ SectionStyles.button, onClick <| config.onNewExample Examples.Structs ] [ text "Structs" ]
+        , div [ SectionStyles.button, onClick <| config.onNewExample Examples.Pipes ] [ text "Pipes" ]
+        , div [ SectionStyles.button, onClick <| config.onNewExample Examples.SumList ] [ text "Sum List of Integers" ]
         ]
 
 
@@ -204,18 +224,28 @@ aboutSection config =
     }
 
 
+examplesSection : Config msg -> Sections.Section msg
+examplesSection config =
+    { title = "Examples"
+    , icon = Icon.Package
+    , onSelect = config.mapMsg (ChangePanel Model.Examples)
+    , content = viewExamples config
+    }
+
+
 view : Config msg -> Html msg
 view config =
     div [ Styles.container ]
         [ div [ Styles.sections ]
             [ Sections.view <| toIterator config ]
-        , div [ Styles.ad ]
-            [ Ad.view
-                { zoneId = Constants.carbonZoneId
-                , serve = Constants.carbonServe
-                , placement = Constants.carbonPlacement
-                }
-            ]
+
+        -- , div [ Styles.ad ]
+        --     [ Ad.view
+        --         { zoneId = Constants.carbonZoneId
+        --         , serve = Constants.carbonServe
+        --         , placement = Constants.carbonPlacement
+        --         }
+        --     ]
         ]
 
 
@@ -225,23 +255,35 @@ toIterator config =
         Just Model.Packages ->
             Iterator
                 []
-                (Just <| packagesSection config)
+                Nothing
+                --(Just <| packagesSection config)
                 [ settingsSection config
                 , aboutSection config
+                , examplesSection config
                 ]
 
         Just Model.Settings ->
             Iterator
-                [ packagesSection config ]
+                []
+                --packagesSection config ]
                 (Just <| settingsSection config)
-                [ aboutSection config ]
+                [ aboutSection config, examplesSection config ]
 
         Just Model.About ->
             Iterator
-                [ settingsSection config, packagesSection config ]
+                [ settingsSection config ]
+                --, packagesSection config ]
                 (Just <| aboutSection config)
+                [ examplesSection config ]
+
+        Just Model.Examples ->
+            Iterator
+                [ aboutSection config, settingsSection config ]
+                --, packagesSection config ]
+                (Just <| examplesSection config)
                 []
 
         Nothing ->
             Iterator.fromList <|
-                [ packagesSection config, settingsSection config, aboutSection config ]
+                --[ packagesSection config,
+                [ settingsSection config, aboutSection config, examplesSection config ]

@@ -28,6 +28,7 @@ import Data.Elm.Compiler.Error as CompilerError
 import Pages.Editor.Flags as Flags exposing (Flags)
 import Pages.Editor.Header.Model as Header
 import Pages.Editor.Layout.Model as Layout
+import Pages.Editor.Logs.Model as Logs
 import Pages.Editor.Routing as Routing exposing (Route(..))
 import Pages.Editor.Sidebar.Model as Sidebar
 import RemoteData exposing (RemoteData(..))
@@ -54,7 +55,9 @@ type alias Model =
     , sidebar : Sidebar.Model
     , layout : Layout.Model
     , header : Header.Model
+    , logs : Logs.Model
     , termsShown : Bool
+    , elixirCode : String
     }
 
 
@@ -80,7 +83,9 @@ model flags =
     , sidebar = Sidebar.model
     , layout = Layout.init flags.windowSize
     , header = Header.init
+    , logs = Logs.default
     , termsShown = False
+    , elixirCode = ""
     }
 
 
@@ -114,7 +119,7 @@ canCompile model =
                 _ ->
                     False
     in
-    stagePasses && SaveState.canSave model.saveState
+        stagePasses && SaveState.canSave model.saveState
 
 
 resetToNew : Model -> Model
@@ -140,9 +145,9 @@ canSave model =
             (model.stagedElmCode /= model.clientRevision.elmCode)
                 || (model.stagedHtmlCode /= model.clientRevision.htmlCode)
     in
-    (stagedCodeChanged || isRevisionChanged model || not (isSavedProject model))
-        && SaveState.canSave model.saveState
-        && model.isOnline
+        (stagedCodeChanged || isRevisionChanged model || not (isSavedProject model))
+            && SaveState.canSave model.saveState
+            && model.isOnline
 
 
 isRevisionChanged : Model -> Bool

@@ -10,6 +10,7 @@ from typing import (Any, Dict, Iterator, List, NamedTuple, Optional, Pattern,
 from urllib.parse import quote, unquote
 
 import boto3
+import boto3.session
 import botocore
 from flask import request
 
@@ -44,9 +45,8 @@ def _unsign_cookie(value: str) -> Optional[str]:
     to_match = _sign_cookie(unsigned_value)
     return unsigned_value if to_match == value else None
 
-
-s3 = boto3.resource('s3')
-client = boto3.client('s3')
+s3 = boto3.resource('s3', config= boto3.session.Config(signature_version='s3v4'))
+client = boto3.client('s3', config= boto3.session.Config(signature_version='s3v4'))
 bucket = s3.Bucket(BUCKET_NAME)
 
 
@@ -185,7 +185,7 @@ def organize_packages(
 
 def download_searchable_packages() -> Dict[PackageName, SearchablePackages]:
     body = s3.Object(BUCKET_NAME,
-                     'package-artifacts/searchable.json').get()['Body']
+                      'package-artifacts/searchable.json').get()['Body']
     data = body.read()
     packages = list(
         cat_optionals(PackageInfo.from_json(x) for x in json.loads(data)))

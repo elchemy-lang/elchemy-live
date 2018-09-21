@@ -23,12 +23,12 @@ module.exports = {
     path: path.resolve(__dirname + '/build'),
     filename: '[name].[chunkhash:8].js',
     chunkFilename: 'chunk.[name].[chunkhash:8].js',
-    publicPath: process.env.CDN_BASE + '/assets/'
+    publicPath: '/assets/'
   },
 
   resolve: {
     alias: {
-      'Make/0.18.0$': path.resolve(__dirname, 'make/0.18.0/build/Make0180.js')
+      'Make/0.18.0$': path.resolve(__dirname, 'make/0.18.0/build/bundle.js')
     }
   },
 
@@ -42,7 +42,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules|make)/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -70,7 +70,7 @@ module.exports = {
         loaders:  [
           StringReplacePlugin.replace({
             replacements: [
-              { pattern: /\%CDN_BASE\%/g, replacement: () => process.env.CDN_BASE },
+              { pattern: /\%CDN_BASE\%/g, replacement: () => ''},
               { pattern: /\%SERVER_ORIGIN\%/g, replacement: () => process.env.SERVER_HOSTNAME },
               { pattern: /\%CARBON_ZONE_ID\%/g, replacement: () => process.env.CARBON_ZONE_ID },
               { pattern: /\%CARBON_SERVE\%/g, replacement: () => process.env.CARBON_SERVE },
@@ -78,7 +78,23 @@ module.exports = {
               { pattern: /\%ENV\%/g, replacement: () => process.env.ENV },
             ]
           }),
-          `elm-webpack-loader?yes&cwd=${path.join(__dirname, 'client')}`,
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [ 'env', { 'targets': { 'uglify': true } } ]
+              ],
+              plugins: ['elm-pre-minify']
+            },
+          },
+          {
+            loader: 'elm-webpack-loader',
+            options: {
+              yes: true,
+              debug: false,
+              cwd: path.join(__dirname, 'client'),
+            }
+          }
         ]
       },
     ]
@@ -88,27 +104,15 @@ module.exports = {
     new webpack.HashedModuleIdsPlugin(),
     new webpack.DefinePlugin({
       SERVER_ORIGIN: JSON.stringify(process.env.SERVER_HOSTNAME),
-      CDN_BASE: JSON.stringify(process.env.CDN_BASE),
+      CDN_BASE: '',
       OPBEAT_APP_ID: JSON.stringify(process.env.OPBEAT_FRONTEND_APP_ID),
       OPBEAT_ORGANIZATION_ID: JSON.stringify(process.env.OPBEAT_ORGANIZATION_ID),
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true,
-        warnings: false,
-        dead_code: true,
-        pure_funcs: ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', '_elm_lang$core$Native_Utils.update', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9'],
-        passes: 2
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
-      }
+      compress: true,
+      mangle: true,
     }),
     new ManifestPlugin(),
     new StringReplacePlugin(),

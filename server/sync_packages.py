@@ -13,6 +13,9 @@ from typing import (Any, Dict, Iterator, List, NamedTuple, Optional, Set,
                     SupportsInt, Tuple, TypeVar)
 
 import boto3
+import boto3.session
+import botocore
+
 import glob2
 import requests
 from joblib import Parallel, delayed
@@ -22,7 +25,7 @@ from .classes import Constraint, PackageInfo, Version
 
 BUCKET_NAME = os.environ['AWS_S3_BUCKET']
 
-s3 = boto3.resource('s3')
+s3 = boto3.resource('s3', config= boto3.session.Config(signature_version='s3v4'))
 bucket = s3.Bucket(BUCKET_NAME)
 
 T = TypeVar('T')
@@ -121,7 +124,8 @@ def read_source_files(base_dir: str, package: PackageInfo,
 def read_artifacts(base_dir: str, package: PackageInfo) -> Any:
     artifacts_base = os.path.join(base_dir,
                                   package.package + '-' + str(package.version),
-                                  'elm-stuff/build-artifacts/0.18.0/elm-lang/',
+                                  'elm-stuff/build-artifacts/0.18.0/',
+                                  package.username,
                                   package.package,
                                   str(package.version))
     artifacts = [
@@ -161,6 +165,10 @@ def get_current_time() -> int:
 min_required_version = Version(0, 18, 0)
 
 
+def needs_prebuild(package: PackageInfo) -> bool:
+    return package.username == 'elm-lang' or (package.username == 'rtfeldman' and package.package == 'elm-css')
+
+
 def process_package(package: PackageInfo) -> Tuple[bool, PackageInfo]:
     try:
         base_dir = make_temp_directory()
@@ -178,7 +186,7 @@ def process_package(package: PackageInfo) -> Tuple[bool, PackageInfo]:
 
         package.set_elm_constraint(constraint)
 
-        if package.username == 'elm-lang':
+        if needs_prebuild(package):
             elm_path = os.path.realpath(
                 os.path.dirname(os.path.realpath(__file__)) +
                 '/../node_modules/elm/Elm-Platform/0.18.0/.cabal-sandbox/bin/elm-make')

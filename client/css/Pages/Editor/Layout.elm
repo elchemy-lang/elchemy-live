@@ -14,12 +14,12 @@ notifications =
         , right zero
         , width (px 400)
         , zIndex (int 10)
-        , padding (px 16)
         , maxHeight (pct 100)
         , overflowY auto
         ]
 
 
+sidebar : UniqueClass
 sidebar =
     uniqueClass
         [ width (px 240)
@@ -27,12 +27,14 @@ sidebar =
         , position relative
         , zIndex (int 1)
         , Colors.boxShadow |> .right
+        , paddingTop (px 10)
         ]
 
 
+header : UniqueClass
 header =
     uniqueClass
-        [ height (px 40)
+        [ height (px 70)
         ]
 
 
@@ -60,7 +62,7 @@ mainContainer : UniqueClass
 mainContainer =
     uniqueClass
         [ width (pct 100)
-        , height <| calc (pct 100) minus (px 40)
+        , height <| calc (pct 100) minus (px 70)
         , displayFlex
         , position relative
         , zIndex (int 1)
@@ -102,7 +104,8 @@ editorContainer =
     uniqueClass
         [ height (pct 50)
         , position relative
-        , backgroundColor Colors.darkMediumGray
+        , paddingTop (px 10)
+        , backgroundColor Colors.blueGrey
         , firstChild
             [ borderBottom3 (px 1) solid Colors.darkGray
             ]
@@ -126,8 +129,8 @@ editorContainerFull =
         ]
 
 
-outputContainer : UniqueClass
-outputContainer =
+outputAndLogsContainer : UniqueClass
+outputAndLogsContainer =
     uniqueClass
         [ width (pct 50)
         , height (pct 100)
@@ -135,6 +138,35 @@ outputContainer =
         , zIndex (int 1)
         , Colors.boxShadow |> .left
         , overflow hidden
+        , displayFlex
+        , flexDirection column
+        ]
+
+
+outputContainer : UniqueClass
+outputContainer =
+    uniqueClass
+        [ height (pct 100)
+        , flexShrink (int 1)
+        , position relative
+        , displayFlex
+        ]
+
+
+logsContainer : UniqueClass
+logsContainer =
+    uniqueClass
+        [ position relative
+        , displayFlex
+        , borderTop3 (px 2) solid Colors.mediumGray
+        ]
+
+
+logsContainerCollapsed : UniqueClass
+logsContainerCollapsed =
+    uniqueClass
+        [ height (px 40)
+        , flexShrink (int 0)
         ]
 
 
@@ -159,8 +191,8 @@ outputResizeHandle =
         ]
 
 
-editorResizeHandle : UniqueClass
-editorResizeHandle =
+verticalResizeHandle : UniqueClass
+verticalResizeHandle =
     uniqueClass
         [ position absolute
         , height (px 6)

@@ -1,32 +1,41 @@
-module Pages.Editor.Layout.Model exposing (EditorCollapse(..), Model, init, reset)
+module Pages.Editor.Layout.Model exposing (DragTarget(..), EditorCollapse(..), Model, init, reset)
 
 import Window exposing (Size)
 
 
 type EditorCollapse
     = BothOpen
-    | JustHtmlOpen
+    | JustElixirOpen
     | JustElmOpen
+
+
+type DragTarget
+    = EditorsHandle
+    | LogsHandle
+    | OutputHandle
+    | NoTarget
 
 
 type alias Model =
     { resultSplit : Float
-    , resultDragging : Bool
     , editorSplit : Float
-    , editorDragging : Bool
+    , dragTarget : DragTarget
     , windowSize : Size
     , editorCollapse : EditorCollapse
+    , logsCollapsed : Bool
+    , logsSplit : Float
     }
 
 
 init : Size -> Model
 init windowSize =
     { resultSplit = 0.5
-    , resultDragging = False
-    , editorSplit = 0.7
-    , editorDragging = False
+    , editorSplit = 0.5
     , editorCollapse = BothOpen
     , windowSize = windowSize
+    , logsCollapsed = True
+    , logsSplit = 0.5
+    , dragTarget = NoTarget
     }
 
 
@@ -42,4 +51,4 @@ htmlIsHidden model =
 
 elmIsHidden : Model -> Bool
 elmIsHidden model =
-    model.editorCollapse == JustHtmlOpen
+    model.editorCollapse == JustElixirOpen

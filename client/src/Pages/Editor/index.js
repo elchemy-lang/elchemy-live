@@ -7,6 +7,7 @@ import OpbeatRunner from '../../Ellie/Opbeat/Runner'
 import CodeMirrorRunner from '../../Ellie/CodeMirror/Runner'
 import AwsRunner from '../../Ellie/Aws/Runner'
 import IconLoader from '../../Ellie/Ui/Icon/Loader'
+import LogsRunner from '../../Pages/Editor/Logs/Runner'
 import Layout from './Layout'
 
 IconLoader.load()
@@ -46,6 +47,7 @@ CodeMirrorLoader
     CodeMirrorRunner.start(CodeMirror, app)
     AwsRunner.start(app)
     OpbeatRunner.start(app)
+    LogsRunner.start(app)
 
     app.ports.pathChangedOut.subscribe(() => {
       previousLocation = window.location.pathname
@@ -103,8 +105,8 @@ CodeMirrorLoader
         let workQueue = []
         let runForSave, htmlCode
 
-        const readFile = (file) =>
-          new Promise((resolve, reject) => {
+        const readFile = (file) => {
+          return new Promise((resolve, reject) => {
             const fr = new FileReader()
             fr.addEventListener('load', () => {
               resolve(fr.result)
@@ -114,6 +116,7 @@ CodeMirrorLoader
             })
             fr.readAsText(file)
           })
+        }
 
         const getSourceScript = (scriptFile) => {
           if (runForSave) {
@@ -137,7 +140,7 @@ CodeMirrorLoader
             var nextMessage = workQueue.shift()
 
             if (nextMessage.type === 'Success') {
-              getSourceScript(nextMessage.url)
+              getSourceScript(nextMessage.blob)
                 .then(sourceScript => fixHtml({
                   htmlCode,
                   embedApi: !runForSave,
@@ -146,22 +149,28 @@ CodeMirrorLoader
                 .then(htmlUrl => sendToPort({ type: 'Success', url: htmlUrl }))
                 .catch(error => sendToPort({ type: 'Failed', message: error.message }))
             } else {
+              console.log(nextMessage)
               sendToPort(nextMessage)
             }
             setTimeout(work)
           })
         }
 
-        const compiler = Compiler.init(callback)
-
         app.ports.clearElmStuffOut.subscribe(() => {
-          compiler.clearElmStuff()
+          Compiler.clearElmStuff()
         })
 
-        app.ports.compileOnClientOut.subscribe(function ([html, elm, packages, forSave]) {
-          runForSave = forSave
-          htmlCode = html
-          compiler.compile({ elm, packages })
+        Compiler.start({
+          onReport: callback,
+          onReady: compile => {
+            app.ports.compileOnClientOut.subscribe(([html, elm, packages, forSave]) => {
+              runForSave = forSave
+              htmlCode = html
+              compile({ source: elm, dependencies: packages })
+            })
+
+            app.ports.compilerMessagesIn.send({ type: 'Initial' })
+          }
         })
       })
   })

@@ -45,7 +45,7 @@ primary : UniqueClass
 primary =
     uniqueClass
         [ backgroundColor Colors.mediumGray
-        , color Colors.lightGray
+        , color Colors.white
         , backgroundShared
         ]
 
@@ -54,7 +54,7 @@ accent : UniqueClass
 accent =
     uniqueClass
         [ backgroundColor Colors.pink
-        , color Colors.lightGray
+        , color Colors.white
         , backgroundShared
         ]
 
@@ -62,16 +62,16 @@ accent =
 link : UniqueClass
 link =
     uniqueClass
-        [ color Colors.lightMediumGray
+        [ color (hex "#606671")
         , padding zero |> important
         , property "background" "none"
         , fontWeight bold
         , property "transition" "color 150ms"
         , hover
-            [ color Colors.lightGray
+            [ color Colors.white
             ]
         , disabled
-            [ color Colors.lightMediumGray
+            [ color Colors.white
             ]
         ]
 
@@ -121,6 +121,6 @@ inner =
 disabledLink : UniqueClass
 disabledLink =
     uniqueClass
-        [ hover [ color Colors.lightMediumGray |> important ]
+        [ hover [ color Colors.white |> important ]
         , cursor notAllowed
         ]

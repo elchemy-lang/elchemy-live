@@ -96,16 +96,47 @@ pathChanged =
     pathChangedOut ()
 
 
+prependGlue : String -> String
+prependGlue code =
+    let
+        lines =
+            String.lines code
+
+        h =
+            List.head lines |> Maybe.withDefault ""
+
+        t =
+            List.tail lines |> Maybe.withDefault []
+    in
+        h
+            ++ """
+import Html exposing (Html, text)
+"""
+            ++ String.join "\n" t
+            ++ """
+ffi : String -> String -> a
+ffi _ _ = Debug.crash "Can't use ffi in browser"
+
+main : Html msg
+main =
+    (text << toString) run
+"""
+
+
 compile : Model -> Bool -> Cmd msg
 compile model forSave =
     compileOnClientOut
         ( model.stagedHtmlCode
-        , model.stagedElmCode
-        , model.clientRevision
-            |> Revision.toDescription
-            |> .dependencies
-            |> List.map (\( l, r ) -> ( Name.toString l, Constraint.encoder r ))
-            |> Encode.object
+        , model.stagedElmCode |> prependGlue
+        , model.clientRevision.packages
+            |> List.map
+                (\( name, version ) ->
+                    Encode.object
+                        [ ("name", Name.encoder name )
+                        , ("version", Version.encoder version )
+                        ]
+                )
+            |> Encode.list
         , forSave
         )
 

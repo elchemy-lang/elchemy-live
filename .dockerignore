@@ -1,0 +1,13 @@
+node_modules/
+.mongodata/
+elm-stuff/
+.DS_Store
+.secretenv
+*.pyc
+__pycache__/
+npm-debug.log
+env/
+.packages_index/
+.vscode
+.*~
+client/elm-stuff/generated-code

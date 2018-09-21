@@ -11,10 +11,8 @@ from typing import (Any, Dict, Iterator, List, NamedTuple, Optional, Tuple,
                     TypeVar)
 from urllib.parse import urlparse
 
-import boto3
-import botocore
 from flask import (Flask, jsonify, redirect, render_template, request, session,
-                   url_for)
+                   url_for, send_from_directory)
 from opbeat.contrib.flask import Opbeat
 from werkzeug.routing import BaseConverter, HTTPException, ValidationError
 
@@ -184,15 +182,13 @@ def get_default_revision() -> Any:
         'title': '',
         'description': '',
         'id': None,
-        'elmCode': '''module Main exposing (main)
-
-import Html exposing (Html, text)
+        'elmCode': '''module Main exposing (..)
 
 
-main : Html msg
-main =
-    text "Hello, World!"
-''',
+run : String
+run =
+    "Hello, world!"''',
+
         'htmlCode': '''<html>
 <head>
   <style>
@@ -253,7 +249,7 @@ EDITOR_CONSTANTS = {
     'ENV': os.environ['ENV'],
     'APP_JS': assets.asset_path('editor.js'),
     'APP_CSS': assets.asset_path('editor.css'),
-    'GTM_ID': os.environ['GTM_ID'],
+    #'GTM_ID': os.environ['GTM_ID'],
     'PROFILE_PIC': 'idk.jpg',
     'CDN_BASE': os.environ['CDN_BASE'],
     'SERVER_HOSTNAME': os.environ['SERVER_HOSTNAME'],
@@ -269,6 +265,15 @@ def new() -> Any:
     }
 
     return render_template('new.html', constants=EDITOR_CONSTANTS, data=data)
+
+@app.route('/assets/<string:path>')
+def send_assets(path):
+    if assets.is_my_asset(path):
+        print("Kurwa nie moje")
+        print(assets.true_asset(path))
+        return send_from_directory('../build', assets.true_asset(path))
+    else:
+        return send_from_directory('../build', path)
 
 
 @app.route('/<project_id:project_id>/<int(min=0):revision_number>')
@@ -296,7 +301,7 @@ EMBED_CONSTANTS = {
     'ENV': os.environ['ENV'],
     'APP_JS': assets.asset_path('embed.js'),
     'APP_CSS': assets.asset_path('embed.css'),
-    'GTM_ID': os.environ['GTM_ID'],
+    #'GTM_ID': os.environ['GTM_ID'],
     'PROFILE_PIC': 'idk.jpg',
     'CDN_BASE': os.environ['CDN_BASE'],
     'SERVER_HOSTNAME': os.environ['SERVER_HOSTNAME'],

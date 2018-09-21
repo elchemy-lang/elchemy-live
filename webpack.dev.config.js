@@ -1,35 +1,51 @@
-const path = require('path')
-const webpack = require('webpack')
-const StringReplacePlugin = require('string-replace-webpack-plugin')
+const path = require('path');
+const webpack = require('webpack');
+const StringReplacePlugin = require('string-replace-webpack-plugin');
 
-const generatedElmCss = path.resolve(__dirname, 'client/elm-stuff/generated-code/rtfeldman/elm-css/output.css')
+const generatedElmCss = path.resolve(
+  __dirname,
+  'client/elm-stuff/generated-code/rtfeldman/elm-css/output.css'
+);
+
+const PUBLIC_PATH = 'http://localhost:8000/';
 
 module.exports = {
   cache: true,
   target: 'web',
 
   externals: {
-    'fs': '__fileSystem'
+    fs: '__fileSystem'
   },
 
   entry: {
-    editor: ['es6-promise/auto', generatedElmCss, 'webpack-dev-server/client?http://localhost:8000/', path.join(__dirname, 'client/src/Pages/Editor/index.js')],
-    embed: ['es6-promise/auto', generatedElmCss, 'webpack-dev-server/client?http://localhost:8000/', path.join(__dirname, 'client/src/Pages/Embed/index.js')]
+    editor: [
+      'es6-promise/auto',
+      generatedElmCss,
+      `webpack-dev-server/client?${PUBLIC_PATH}`,
+      path.join(__dirname, 'client/src/Pages/Editor/index.js')
+    ],
+    embed: [
+      'es6-promise/auto',
+      generatedElmCss,
+      `webpack-dev-server/client?${PUBLIC_PATH}`,
+      path.join(__dirname, 'client/src/Pages/Embed/index.js')
+    ]
   },
 
   output: {
     path: path.resolve(__dirname + '/dist'),
-    publicPath: 'http://localhost:8000/',
-    filename: '[name].js',
+    publicPath: PUBLIC_PATH,
+    filename: '[name].js'
   },
 
   resolve: {
     alias: {
-      'Make/0.18.0$': path.resolve(__dirname, 'make/0.18.0/build/Make0180.js')
+      'Make/0.18.0$': path.resolve(__dirname, 'make/0.18.0/build/bundle.js')
     }
   },
 
   module: {
+    noParse: [/Make\/0\.18\.0$/],
     rules: [
       {
         test: /\.svg$/,
@@ -39,7 +55,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules|make)/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -50,23 +66,40 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        loader: 'style-loader!css-loader'
       },
-      { test: /\.json$/,
+      {
+        test: /\.json$/,
         loader: 'json-loader'
       },
       {
-        test:    /\.elm$/,
+        test: /\.elm$/,
         exclude: [/elm-stuff/, /node_modules/],
-        loaders:  [
+        loaders: [
           StringReplacePlugin.replace({
             replacements: [
-              { pattern: /\%CDN_BASE\%/g, replacement: () => 'https://s3.us-east-2.amazonaws.com/development-cdn.ellie-app.com' },
-              { pattern: /\%SERVER_ORIGIN\%/g, replacement: () => 'http://localhost:5000' },
-              { pattern: /\%CARBON_ZONE_ID\%/g, replacement: () => process.env.CARBON_ZONE_ID },
-              { pattern: /\%CARBON_SERVE\%/g, replacement: () => process.env.CARBON_SERVE },
-              { pattern: /\%CARBON_PLACEMENT\%/g, replacement: () => process.env.CARBON_PLACEMENT },
-              { pattern: /\%ENV\%/g, replacement: () => 'development' },
+              {
+                pattern: /\%CDN_BASE\%/g,
+                replacement: () =>
+                  'https://s3.us-east-2.amazonaws.com/development-cdn.ellie-app.com'
+              },
+              {
+                pattern: /\%SERVER_ORIGIN\%/g,
+                replacement: () => 'http://localhost:5000'
+              },
+              {
+                pattern: /\%CARBON_ZONE_ID\%/g,
+                replacement: () => process.env.CARBON_ZONE_ID
+              },
+              {
+                pattern: /\%CARBON_SERVE\%/g,
+                replacement: () => process.env.CARBON_SERVE
+              },
+              {
+                pattern: /\%CARBON_PLACEMENT\%/g,
+                replacement: () => process.env.CARBON_PLACEMENT
+              },
+              { pattern: /\%ENV\%/g, replacement: () => 'development' }
             ]
           }),
           {
@@ -76,25 +109,29 @@ module.exports = {
               forceWatch: true,
               cache: true,
               yes: true,
-              debug: true,
+              debug: false,
               cwd: path.join(__dirname, 'client'),
               ignore: /generated-code/
             }
           }
         ]
-      },
+      }
     ]
   },
 
   plugins: [
     new webpack.DefinePlugin({
-      CDN_BASE: JSON.stringify('https://s3.us-east-2.amazonaws.com/development-cdn.ellie-app.com'),
+      CDN_BASE: JSON.stringify(
+        'https://s3.us-east-2.amazonaws.com/development-cdn.ellie-app.com'
+      ),
       SERVER_ORIGIN: JSON.stringify('http://localhost:5000'),
       OPBEAT_APP_ID: JSON.stringify(process.env.OPBEAT_FRONTEND_APP_ID),
-      OPBEAT_ORGANIZATION_ID: JSON.stringify(process.env.OPBEAT_ORGANIZATION_ID),
+      OPBEAT_ORGANIZATION_ID: JSON.stringify(
+        process.env.OPBEAT_ORGANIZATION_ID
+      ),
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    new StringReplacePlugin(),
+    new StringReplacePlugin()
   ],
 
   devServer: {
@@ -102,15 +139,13 @@ module.exports = {
     stats: { colors: true },
     historyApiFallback: true,
     port: '8000',
-    allowedHosts: [
-      'http://localhost:5000'
-    ],
+    allowedHosts: ['http://localhost:5000'],
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': '*'
     },
     watchOptions: {
       aggregateTimeout: 300,
       poll: 1000
-    },
-  },
-}
+    }
+  }
+};

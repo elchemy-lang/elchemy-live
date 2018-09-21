@@ -11,8 +11,8 @@ header : UniqueClass
 header =
     uniqueClass
         [ width (pct 100)
-        , height (px 40)
-        , backgroundColor Colors.darkGray
+        , height (px 70)
+        , backgroundImage Colors.elchemyGradient
         , displayFlex
         , alignItems center
         , justifyContent spaceBetween
@@ -73,10 +73,14 @@ headerGroup =
 logo : UniqueSvgClass
 logo =
     uniqueSvgClass
-        [ fill Colors.lightGray
+        [ fill Colors.white
         , height (px 20)
-        , width (px 51)
-        , marginRight (px 24)
+        , width (px 10)
+        , margin4 (px -5) (px 50) (px 10) (px 10)
+        , fontFamilies [ "Helvetica Neue" ]
+        , fontWeight (int 700)
+        , fontSize (Css.em 1.7)
+        , color (Colors.white)
         ]
 
 

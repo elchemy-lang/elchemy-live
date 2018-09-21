@@ -21,6 +21,8 @@ import Pages.Editor.Cmds as Cmds
 import Pages.Editor.Flags as Flags exposing (Flags)
 import Pages.Editor.Header.Update as Header
 import Pages.Editor.Layout.Update as Layout
+import Pages.Editor.Logs.Update as Logs
+import Pages.Editor.LintTips as LintTips
 import Pages.Editor.Model as Model exposing (Model)
 import Pages.Editor.Routing as Routing exposing (Route(..))
 import Pages.Editor.Save.Update as Save
@@ -30,6 +32,9 @@ import Process
 import RemoteData exposing (RemoteData(..))
 import Task
 import Time exposing (Time)
+import Native.Hacks
+import Compiler as Elchemy
+import Data.Examples as Examples
 
 
 when : (m -> Bool) -> (m -> m) -> m -> m
@@ -95,6 +100,7 @@ type Msg
     | CreateGist
     | CreateGistComplete (Result ApiError String)
     | ClearElmStuff
+    | SelectExample Examples.Example
     | ToggleVimMode Bool
     | NoOp
       -- CodeMirror Stuff
@@ -108,6 +114,7 @@ type Msg
     | HeaderMsg Header.Msg
     | SidebarMsg Sidebar.Msg
     | LayoutMsg Layout.Msg
+    | LogsMsg Logs.Msg
 
 
 onlineNotification : Bool -> Cmd Msg
@@ -116,19 +123,24 @@ onlineNotification isOnline =
         Cmds.notify NotificationReceived
             { level = Notification.Success
             , title = "You're Online!"
-            , message = "Ellie has detected that your internet connection is online."
+            , message = "Elchemy has detected that your internet connection is online."
             }
     else
         Cmds.notify NotificationReceived
             { level = Notification.Error
             , title = "You're Offline!"
-            , message = "Ellie can't connect to the server right now, so we've disabled most features."
+            , message = "Elchemy can't connect to the server right now, so we've disabled most features."
             }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        LogsMsg logsMsg ->
+            Logs.update logsMsg model.logs
+                |> Tuple.mapFirst (\l -> { model | logs = l })
+                |> Tuple.mapSecond (Cmd.map LogsMsg)
+
         ToggleVimMode enabled ->
             ( { model | vimMode = enabled }
             , Cmd.batch
@@ -142,6 +154,9 @@ update msg model =
             ( model
             , Opbeat.capture exception
             )
+
+        SelectExample example ->
+            ( model, CodeMirror.updateValue "elmEditor" (Examples.getExample example) )
 
         SidebarMsg sidebarMsg ->
             model.sidebar
@@ -184,10 +199,10 @@ update msg model =
                 updatedRevision =
                     { originalRevision | elmCode = model.stagedElmCode, htmlCode = model.stagedHtmlCode }
             in
-            ( { model | creatingGist = True }
-            , Api.createGist updatedRevision
-                |> Api.send CreateGistComplete
-            )
+                ( { model | creatingGist = True }
+                , Api.createGist updatedRevision
+                    |> Api.send CreateGistComplete
+                )
 
         CreateGistComplete result ->
             ( { model | creatingGist = False }
@@ -280,7 +295,7 @@ update msg model =
                         [ Cmds.notify NotificationReceived
                             { level = Notification.Success
                             , title = "Your Project Is Loaded!"
-                            , message = "Ellie found the project and revision you asked for. It's loaded up and ready to be run."
+                            , message = "Elchemy found the project and revision you asked for. It's loaded up and ready to be run."
                             }
                         , CodeMirror.updateValue "elmEditor" result.elmCode
                         , CodeMirror.updateValue "htmlEditor" result.htmlCode
@@ -293,7 +308,7 @@ update msg model =
                         Cmds.notify NotificationReceived
                             { level = Notification.Error
                             , title = "Failed To Load Project"
-                            , message = "Ellie couldn't load the project you asked for. Here's what the server said:\n" ++ apiError.explanation
+                            , message = "Elchemy couldn't load the project you asked for. Here's what the server said:\n" ++ apiError.explanation
                             }
             )
 
@@ -328,11 +343,20 @@ update msg model =
                 Cmd.none
             )
 
-        ElmCodeChanged code ->
-            ( model
-                |> (\m -> { m | stagedElmCode = code })
-            , Cmd.none
-            )
+        ElmCodeChanged elmCode ->
+            let
+                elixirCode =
+                    compileElchemy elmCode
+            in
+                ( { model
+                    | stagedElmCode = elmCode
+                    , elixirCode = elixirCode
+                  }
+                , Cmd.batch
+                    [ CodeMirror.updateValue "elixirEditor" elixirCode
+                    , CodeMirror.updateLinter "elmEditor" (LintTips.lint elmCode)
+                    ]
+                )
 
         HtmlCodeChanged code ->
             ( model
@@ -353,16 +377,16 @@ update msg model =
                 ]
             )
 
-        FormattingCompleted (Ok code) ->
+        FormattingCompleted (Ok elmCode) ->
             ( { model
-                | stagedElmCode = code
+                | stagedElmCode = elmCode
                 , previousElmCode =
                     if model.previousElmCode == model.stagedElmCode then
-                        code
+                        elmCode
                     else
                         model.previousElmCode
               }
-            , CodeMirror.updateValue "elmEditor" code
+            , CodeMirror.updateValue "elmEditor" elmCode
             )
 
         FormattingCompleted (Err apiError) ->
@@ -371,7 +395,7 @@ update msg model =
                 [ Cmds.notify NotificationReceived
                     { level = Notification.Error
                     , title = "Formatting Your Code Failed"
-                    , message = "Ellie couldn't format your code. Here's what the server said:\n" ++ apiError.explanation
+                    , message = "Elchemy couldn't format your code. Here's what the server said:\n" ++ apiError.explanation
                     }
                 , if apiError.statusCode == 500 then
                     Opbeat.capture
@@ -398,14 +422,14 @@ update msg model =
                 ( nextModel, notification, cmd ) =
                     Save.update model saveMsg
             in
-            ( nextModel
-            , Cmd.batch
-                [ notification
-                    |> Maybe.map (Cmds.notify NotificationReceived)
-                    |> Maybe.withDefault Cmd.none
-                , Cmd.map SaveMsg cmd
-                ]
-            )
+                ( nextModel
+                , Cmd.batch
+                    [ notification
+                        |> Maybe.map (Cmds.notify NotificationReceived)
+                        |> Maybe.withDefault Cmd.none
+                    , Cmd.map SaveMsg cmd
+                    ]
+                )
 
         NoOp ->
             ( model, Cmd.none )
@@ -414,6 +438,20 @@ update msg model =
 onRouteChange : Navigation.Location -> Msg
 onRouteChange =
     Routing.parse >> RouteChanged
+
+
+compileElchemy : String -> String
+compileElchemy elm =
+    case Native.Hacks.tryCatch Elchemy.tree elm of
+        Ok elixir ->
+            elixir
+
+        Err elchemyError ->
+            elchemyError
+                |> String.split "\n"
+                |> List.map (\a -> "# " ++ a)
+                |> String.join "\n"
+                |> (++) "# Error during compilation\n\n"
 
 
 initialize : Flags -> Navigation.Location -> ( Model, Cmd Msg )
@@ -425,28 +463,28 @@ initialize flags location =
         model =
             { initialModel | currentRoute = Routing.parse location }
     in
-    handleRouteChanged
-        model.currentRoute
-        ( model
-        , Cmd.batch
-            [ CodeMirror.setup "elmEditor"
-                { vimMode = model.vimMode
-                , theme = "material"
-                , mode = "elm"
-                , initialValue = model.clientRevision.elmCode
-                , readOnly = False
-                , tabSize = 4
-                }
-            , CodeMirror.setup "htmlEditor"
-                { vimMode = model.vimMode
-                , theme = "material"
-                , mode = "htmlmixed"
-                , initialValue = model.clientRevision.htmlCode
-                , readOnly = False
-                , tabSize = 2
-                }
-            ]
-        )
+        handleRouteChanged
+            model.currentRoute
+            ( model
+            , Cmd.batch
+                [ CodeMirror.setup "elmEditor"
+                    { vimMode = model.vimMode
+                    , theme = "material"
+                    , mode = "elm"
+                    , initialValue = model.clientRevision.elmCode
+                    , readOnly = False
+                    , tabSize = 4
+                    }
+                , CodeMirror.setup "elixirEditor"
+                    { vimMode = model.vimMode
+                    , theme = "material"
+                    , mode = "ruby"
+                    , initialValue = ""
+                    , readOnly = True
+                    , tabSize = 2
+                    }
+                ]
+            )
 
 
 handleRouteChanged : Route -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
