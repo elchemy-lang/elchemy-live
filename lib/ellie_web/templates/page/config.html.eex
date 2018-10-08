@@ -1,0 +1,5 @@
+<script>
+    window.ellieConfig = {
+        latestTerms: 3
+    }
+</script>

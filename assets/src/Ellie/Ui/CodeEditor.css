@@ -1,0 +1,116 @@
+code-editor {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+
+/* code-editor .CodeMirror {
+  background-color: #292929 !important;
+  width: 100%;
+  height: 100%;
+  font-family: var(--theme-font-family-editor);
+  font-size: var(--editor-font-size);
+} */
+
+code-editor .CodeMirror {
+  width: 100%;
+  height: 100%;
+  font-family: Hasklig, monospace;
+  font-size: 14px;
+  font-weight: normal;
+  background-color: #2F3541 !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+.CodeMirror-focused .CodeMirror-activeline-background,
+.CodeMirror-focused .CodeMirror-activeline-gutter {
+  background-color: #2F3541 !important;
+}
+
+.CodeMirror .CodeMirror-gutters {
+  background-color: #2F3541 !important;
+}
+
+.CodeMirror-cursor {
+  background-color: #f1602b !important;
+}
+
+.CodeMirror .cm-keyword {
+  color: #44C0C6 !important;
+}
+
+.CodeMirror .cm-number {
+  color: #D1BC92 !important;
+}
+
+.CodeMirror .cm-variable {
+  color: #bcc7d2 !important;
+}
+
+.CodeMirror .cm-variable-2 {
+  color: #D1BC92 !important;
+}
+
+.CodeMirror .cm-tag {
+  color: #D1BC92 !important;
+}
+
+.CodeMirror .CodeMirror-linenumber {
+  color: #606671 !important;
+  opacity: 0.6;
+}
+
+.CodeMirror-lint-tooltip {
+  background-color: #292929 !important;
+  color: #e9eded !important;
+  border: 0 !important;
+  padding: 12px !important;
+
+  border-radius: 3px !important;
+}
+
+.CodeMirror-lint-marker-warning, .CodeMirror-lint-message-warning,
+.CodeMirror-lint-message-error, .CodeMirror-lint-message-warning {
+  background-image: none !important;
+  padding: 0 !important;
+}
+
+.CodeMirror-lint-mark-error, .CodeMirror-lint-mark-warning {
+    background-image: none !important;
+    border-bottom-style: dashed;
+    border-bottom-width: 1px !important;
+}
+
+.CodeMirror-lint-mark-error {
+  border-bottom-color: #ec5f67 !important;
+}
+
+.CodeMirror-lint-mark-warning {
+  border-bottom-color: #DECB6B !important;
+}
+
+.CodeMirror .cm-tag.cm-bracket {
+  color: #82b1ff !important;
+}
+
+.CodeMirror .cm-type {
+  color: #dee2e3 !important;
+}
+.CodeMirror .cm-string {
+  color: #FC8458 !important;
+}
+
+.CodeMirror .cm-attribute {
+  color: #decb6b !important;
+}
+
+.CodeMirror pre {
+  padding-left: 20px !important ;
+}
+
+.CodeMirror-lines {
+  padding-left: 20px !important ;
+  margin: 0 !important;
+}
