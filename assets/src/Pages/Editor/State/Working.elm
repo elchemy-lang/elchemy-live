@@ -1,6 +1,7 @@
 module Pages.Editor.State.Working exposing (ErrorsPane(..), Model, Msg(..), SuccessPane(..), Workbench(..), addNotification, addNotificationIf, canReplaceRevision, compilerVersion, fromEditorAction, hasChanged, init, reset, subscriptions, toRevision, update, withRecoveryUpdate)
 
 import BoundedDeque exposing (BoundedDeque)
+import Data.Elchemy as Elchemy
 import Data.Jwt exposing (Jwt)
 import Data.Replaceable as Replaceable exposing (Replaceable)
 import Effect.Command as Command exposing (Command)
@@ -406,7 +407,7 @@ update msg ({ user } as model) =
             ErrorsPaneSelected pane ->
                 case model.workbench of
                     FinishedWithError state ->
-                        ( { model | workbench = FinishedWithError { state | pane = pane } }
+                        ( { model | workbench = FinishedWithError { state | pane = pane } } |> Debug.log "Error"
                         , Command.none
                         )
 
@@ -501,7 +502,7 @@ update msg ({ user } as model) =
 
                 else
                     ( { model | compiling = True }
-                    , Effects.compile model.token (compilerVersion model) model.elmCode model.packages
+                    , Effects.compile model.token (compilerVersion model) (Elchemy.wrapCode model.elmCode) model.packages
                         |> Command.map
                             (\result ->
                                 case result of

@@ -87,11 +87,10 @@ default packages =
 
 """
     , elmCode = """module Main exposing (..)
-import Html
 
-main : Html.Html msg
+run : String
 main =
-    Html.text "Hello, world!"
+    "Hello, world!"
 
 """
     }

@@ -1,4 +1,4 @@
-module Ellie.Ui.Theme exposing (..)
+module Ellie.Ui.Theme exposing (accent, blue, buttonBackground, buttonBorder, connectionStatusConnected, connectionStatusDisconnected, controlBorder, darkGray, darkMediumGray, darkStyles, draggableBorder, editorFontFamily, editorHeaderBackground, failure, green, information, lightGray, lightMediumGray, lightStyles, markdownCodeBackground, mediumGray, pink, primaryBackground, primaryForeground, red, secondaryBackground, secondaryForeground, staticBorder, success, tabActiveBorder, tabForeground, warning, workbenchWatermark, yellow)
 
 import Css exposing (..)
 import Css.Foreign
@@ -125,7 +125,7 @@ darkStyles =
         , property "--theme-color-border-control" mediumGray.value
         , property "--theme-color-accent" pink.value
         , property "--theme-color-background-primary" darkMediumGray.value
-        , property "--theme-color-background-secondary" darkGray.value
+        , property "--theme-color-background-secondary" darkMediumGray.value
         , property "--theme-color-foreground-primary" lightGray.value
         , property "--theme-color-foreground-secondary" lightMediumGray.value
         , property "--theme-color-connection-status-connected" green.value
@@ -171,7 +171,7 @@ lightGray =
 
 mediumGray : Color
 mediumGray =
-    hex "#525252"
+    hex "#ffffff"
 
 
 pink : Color
