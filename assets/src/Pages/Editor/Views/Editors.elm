@@ -79,7 +79,7 @@ view config =
             , minSize = 24
             , first =
                 Html.div [ containerStyles ]
-                    [ viewEditorHeader config "Elm" "Format Elm Code (⇧⌥F)" config.onFormat <| Icon.view Icon.Format
+                    [ viewEditorHeader config "Elchemy" "Format Elchemy Code (⇧⌥F)" config.onFormat <| Icon.view Icon.Format
                     , Html.div [ editorStyles ]
                         [ CodeEditor.view
                             [ CodeEditor.value config.elmCode
@@ -127,7 +127,7 @@ view config =
                     ]
             , second =
                 Html.div [ containerStyles ]
-                    [ viewEditorHeader config "Elchemy" "Collapse Elchemy Editor" config.onCollapse <|
+                    [ viewEditorHeader config "Elixir" "Collapse Elixir Editor" config.onCollapse <|
                         if config.ratio == 1 then
                             Html.div
                                 [ css [ height (pct 100), transform (rotate (deg 180)) ] ]
