@@ -6,10 +6,6 @@ defmodule Elm.Platform.Local19 do
   alias Elm.Version
   require Logger
 
-  @elm_version_minor 18
-  @elm_version "0.#{@elm_version_minor}.0"
-  @elm_json if @elm_version_minor == 19, do: "elm.json", else: "elm-package.json"
-
   @spec setup(Path.t()) :: {:ok, Project.t()} | :error
   def setup(root) do
     with :ok <- elm_init(root) do
@@ -17,7 +13,7 @@ defmodule Elm.Platform.Local19 do
       project_json = read_project!(root)
 
       project = %Project{
-        elm_version: Version.create(0, @elm_version_minor, 0),
+        elm_version: Version.create(0, 19, 0),
         dependencies:
           project_json
           |> Map.get("dependencies", %{})
@@ -65,7 +61,7 @@ defmodule Elm.Platform.Local19 do
         File.mkdir_p!(Path.join(root, Path.dirname(entry)))
         File.write!(Path.join(root, entry), source)
 
-        binary = Application.app_dir(:ellie, "priv/bin/#{@elm_version}/elm")
+        binary = Application.app_dir(:ellie, "priv/bin/0.19.0/elm")
 
         args = [
           "--num",
@@ -105,7 +101,7 @@ defmodule Elm.Platform.Local19 do
 
   @spec format(String.t()) :: {:ok, String.t()} | :error
   def format(code) do
-    binary = Application.app_dir(:ellie, "priv/bin/#{@elm_version}/elm-format")
+    binary = Application.app_dir(:ellie, "priv/bin/0.19.0/elm-format")
     args = ["--stdin"]
     options = [in: code, out: :string, err: :string]
     result = Porcelain.exec(binary, args, options)
@@ -122,7 +118,7 @@ defmodule Elm.Platform.Local19 do
   # Helpers
 
   defp install_transitive_deps(root) do
-    binary = Application.app_dir(:ellie, "priv/bin/#{@elm_version}/elm")
+    binary = Application.app_dir(:ellie, "priv/bin/0.19.0/elm")
     args = ["--num", "1", binary, "make", "--report", "json"]
     options = [dir: root, out: :string, err: :string]
     result = Porcelain.exec("sysconfcpus", args, options)
@@ -137,7 +133,7 @@ defmodule Elm.Platform.Local19 do
           {:ok, :missing_required, name} ->
             original_elm_json =
               root
-              |> Path.join("#{@elm_json}.original")
+              |> Path.join("elm.json.original")
               |> File.read!()
               |> Poison.decode!()
 
@@ -240,7 +236,7 @@ defmodule Elm.Platform.Local19 do
   end
 
   defp elm_init(root) do
-    binary = Application.app_dir(:ellie, "priv/bin/#{@elm_version}/elm")
+    binary = Application.app_dir(:ellie, "priv/bin/0.19.0/elm")
     args = ["init"]
     options = [out: :string, err: :string, dir: root, in: "Y"]
     result = Porcelain.exec(binary, args, options)
@@ -248,7 +244,7 @@ defmodule Elm.Platform.Local19 do
 
     case result do
       %Porcelain.Result{status: 0} ->
-        case File.cp(Path.join(root, "#{@elm_json}"), Path.join(root, "#{@elm_json}.original")) do
+        case File.cp(Path.join(root, "elm.json"), Path.join(root, "elm.json.original")) do
           :ok ->
             :ok
 
@@ -256,7 +252,7 @@ defmodule Elm.Platform.Local19 do
             Sentry.capture_message("elm init filesystem error",
               extra: %{
                 reason: reason,
-                elm_version: "#{@elm_version}"
+                elm_version: "0.19.0"
               }
             )
 
@@ -269,7 +265,7 @@ defmodule Elm.Platform.Local19 do
             stderr: result.err,
             stdout: result.out,
             status: result.status,
-            elm_version: "#{@elm_version}"
+            elm_version: "0.19.0"
           }
         )
 
@@ -277,7 +273,7 @@ defmodule Elm.Platform.Local19 do
 
       {:error, reason} ->
         Sentry.capture_message("elm init startup error",
-          extra: %{reason: reason, elm_version: "#{@elm_version}"}
+          extra: %{reason: reason, elm_version: "0.19.0"}
         )
 
         {:error, reason}
@@ -303,21 +299,21 @@ defmodule Elm.Platform.Local19 do
 
   defp read_project!(root) do
     root
-    |> Path.join("#{@elm_json}")
+    |> Path.join("elm.json")
     |> File.read!()
     |> Poison.decode!()
   end
 
   defp write_project!(project_json, root) do
     root
-    |> Path.join("#{@elm_json}")
+    |> Path.join("elm.json")
     |> File.write!(Poison.encode!(project_json))
   end
 
   defp default_project() do
     %{
       "type" => "application",
-      "elm-version" => "#{@elm_version}",
+      "elm-version" => "0.19.0",
       "source-directories" => ["src"],
       "dependencies" => %{
         "direct" => %{},
