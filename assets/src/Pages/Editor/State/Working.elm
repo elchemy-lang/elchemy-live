@@ -679,7 +679,7 @@ update msg ({ user } as model) =
                 )
 
             HtmlCodeChanged code ->
-                ( model
+                ( { model | htmlCode = code }
                 , Command.none
                 )
 
