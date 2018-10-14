@@ -41,7 +41,7 @@ viewLogo =
             , height (px 58)
             , padding4 (px 16) (px 16) (px 12) (px 16)
             , color Theme.primaryForeground
-            , fontFamilies [ "Helvetica Neue" ]
+            , fontFamilies [ "Helvetica Neue", "Helvetica" ]
             , fontWeight bold
             , fontSize (em 2)
             , cursor default
