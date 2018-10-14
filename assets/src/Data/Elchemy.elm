@@ -7,19 +7,25 @@ wrapCode code =
         newCode =
             code
                 |> String.lines
-                |> List.drop 1
+                |> List.drop 2
                 |> String.join "\n"
     in
-    """
-module Main exposing (..)
+    prefix ++ newCode ++ postfix
+
+prefix : String
+prefix =
+    """module Main exposing (..)
 import Html
+"""
+
+postfix : String
+postfix =
+    """
 
 main : Html.Html msg
 main =
     Html.text <| toString run
 
-ffi =
+ffi mod fun =
     Debug.crash "FFI calls do not work in the browser"
-""" ++ newCode ++ """
-
 """

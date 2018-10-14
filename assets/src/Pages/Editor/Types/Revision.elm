@@ -89,7 +89,7 @@ default packages =
     , elmCode = """module Main exposing (..)
 
 run : String
-main =
+run =
     "Hello, world!"
 
 """
