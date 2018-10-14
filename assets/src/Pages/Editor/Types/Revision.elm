@@ -22,7 +22,6 @@ type alias Id =
 type alias Revision =
     { htmlCode : String
     , elmCode : String
-    , elchemyCode : String
     , packages : List Package
     , title : String
     , elmVersion : Version
@@ -41,10 +40,9 @@ embedLink id =
 
 localStorageDecoder : Decoder Revision
 localStorageDecoder =
-    Decode.map6 Revision
+    Decode.map5 Revision
         (Decode.field "htmlCode" Decode.string)
         (Decode.field "elmCode" Decode.string)
-        (Decode.field "elchemyCode" Decode.string)
         (Decode.field "packages" (Decode.list Package.decoder))
         (Decode.field "title" Decode.string)
         (Decode.field "elmVersion" Version.decoder)
@@ -55,7 +53,6 @@ localStorageEncoder revision =
     Encode.object
         [ ( "htmlCode", Encode.string revision.htmlCode )
         , ( "elmCode", Encode.string revision.elmCode )
-        , ( "elchemyCode", Encode.string revision.elchemyCode )
         , ( "packages", Encode.list <| List.map Package.encoder revision.packages )
         , ( "title", Encode.string revision.title )
         , ( "elmVersion", Version.encoder revision.elmVersion )
@@ -67,7 +64,6 @@ default packages =
     { packages = packages
     , title = ""
     , elmVersion = Compiler.version
-    , elchemyCode = ""
     , htmlCode = """<html>
 <html>
 <head>

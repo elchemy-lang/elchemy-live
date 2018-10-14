@@ -5,12 +5,8 @@ defmodule EllieWeb.Graphql.Socket do
   alias EllieWeb.Token
   alias Data.Uuid
 
-  transport(
-    :websocket,
-    Phoenix.Transports.WebSocket,
-    timeout: 45_000,
-    check_origin: false
-  )
+  transport :websocket, Phoenix.Transports.WebSocket,
+    timeout: 45_000
 
   def connect(%{"token" => token}, socket) do
     with {:ok, workspace_string} <- Token.verify(token),

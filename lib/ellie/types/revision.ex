@@ -9,7 +9,6 @@ defmodule Ellie.Types.Revision do
   schema "revisions" do
     field :title, :string
     field :elm_code, :string
-    field :elchemy_code, :string
     field :html_code, :string
     field :packages, {:array, Package}
     field :elm_version, Version
@@ -20,7 +19,7 @@ defmodule Ellie.Types.Revision do
   @doc false
   def changeset(revision, attrs) do
     revision
-    |> cast(attrs, [:id, :title, :elm_code, :elchemy_code, :html_code, :packages, :elm_version, :terms_version])
-    |> validate_required([:id, :elm_code, :elchemy_code, :html_code, :packages, :elm_version, :terms_version])
+    |> cast(attrs, [:id, :title, :elm_code, :html_code, :packages, :elm_version, :terms_version])
+    |> validate_required([:id, :elm_code, :html_code, :packages, :elm_version, :terms_version])
   end
 end

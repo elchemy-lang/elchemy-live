@@ -116,7 +116,7 @@ reset token user recovery external defaultPackages =
     in
     { elmCode = activeRevision.elmCode
     , htmlCode = activeRevision.htmlCode
-    , elchemyCode = activeRevision.elchemyCode
+    , elchemyCode = ""
     , packages = activeRevision.packages
     , projectName = activeRevision.title
     , notifications = []
@@ -176,7 +176,6 @@ toRevision : Model -> Revision
 toRevision model =
     { elmCode = model.elmCode
     , htmlCode = model.htmlCode
-    , elchemyCode = model.elchemyCode
     , packages = model.packages
     , title = model.projectName
     , elmVersion = Compiler.version

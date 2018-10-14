@@ -47,7 +47,6 @@ getRevision revisionId =
             ApiRevision.selection Revision
                 |> with ApiRevision.htmlCode
                 |> with ApiRevision.elmCode
-                |> with ApiRevision.elchemyCode
                 |> with (ApiRevision.packages Package.selection)
                 |> with (ApiHelpers.defaultField "" ApiRevision.title)
                 |> with (ApiHelpers.versionField ApiRevision.elmVersion)
@@ -219,7 +218,6 @@ createRevision token termsVersion revision =
             { inputs =
                 { elmCode = revision.elmCode
                 , htmlCode = revision.htmlCode
-                , elchemyCode = revision.elchemyCode
                 , packages = List.map Package.toInputObject revision.packages
                 , termsVersion = termsVersion
                 , title =
