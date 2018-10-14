@@ -42,6 +42,7 @@ getRevision revisionId =
             ApiRevision.selection Revision
                 |> with ApiRevision.htmlCode
                 |> with ApiRevision.elmCode
+                |> with ApiRevision.elchemyCode
                 |> with (ApiRevision.packages Package.selection)
                 |> with (ApiHelpers.defaultField "" ApiRevision.title)
                 |> with (ApiHelpers.versionField ApiRevision.elmVersion)

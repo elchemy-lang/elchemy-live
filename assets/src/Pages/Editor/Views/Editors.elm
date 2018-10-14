@@ -17,6 +17,7 @@ type alias Config msg =
     , onElmChange : String -> msg
     , onTokenChange : CodeEditor.Located CodeEditor.Token -> msg
     , htmlCode : String
+    , elchemyCode : String
     , onHtmlChange : String -> msg
     , onResize : Float -> msg
     , ratio : Float
@@ -78,7 +79,7 @@ view config =
             , minSize = 24
             , first =
                 Html.div [ containerStyles ]
-                    [ viewEditorHeader config "Elm" "Format Elm Code (⇧⌥F)" config.onFormat <| Icon.view Icon.Format
+                    [ viewEditorHeader config "Elchemy" "Format Elchemy Code (⇧⌥F)" config.onFormat <| Icon.view Icon.Format
                     , Html.div [ editorStyles ]
                         [ CodeEditor.view
                             [ CodeEditor.value config.elmCode
@@ -126,7 +127,7 @@ view config =
                     ]
             , second =
                 Html.div [ containerStyles ]
-                    [ viewEditorHeader config "HTML" "Collapse HTML Editor" config.onCollapse <|
+                    [ viewEditorHeader config "Elixir" "Collapse Elixir Editor" config.onCollapse <|
                         if config.ratio == 1 then
                             Html.div
                                 [ css [ height (pct 100), transform (rotate (deg 180)) ] ]
@@ -135,12 +136,13 @@ view config =
                             Icon.view Icon.Chevron
                     , Html.div [ editorStyles ]
                         [ CodeEditor.view
-                            [ CodeEditor.value config.htmlCode
+                            [ CodeEditor.value config.elchemyCode
                             , CodeEditor.onChange config.onHtmlChange
-                            , CodeEditor.mode "htmlmixed"
+                            , CodeEditor.mode "elixir"
                             , CodeEditor.tabSize 2
                             , CodeEditor.vim config.vimMode
                             , CodeEditor.id "html"
+                            , CodeEditor.readOnly
                             ]
                         ]
                     ]

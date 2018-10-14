@@ -44,8 +44,8 @@ view loadingStage =
 
             _ ->
                 [ Html.styled Html.div
-                    [ width (pct 80)
-                    , maxWidth (px 500)
+                    [
+                     maxWidth (px 500)
                     , position relative
                     ]
                     []

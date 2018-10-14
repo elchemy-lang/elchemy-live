@@ -52,7 +52,7 @@ view config =
                 [ position absolute
                 , top (pct 100)
                 , right zero
-                , borderRadius (px 5)
+                , borderRadius (px 0)
                 , backgroundColor (hex "#F6F6F6")
                 , padding2 (px 4.5) zero
                 , zIndex (int 1)

@@ -26,7 +26,7 @@ boxShadow =
 
 darkMediumGray : Color
 darkMediumGray =
-    hex "292929"
+    hex "#272c35"
 
 
 lightGray : Color
@@ -36,7 +36,7 @@ lightGray =
 
 mediumGray : Color
 mediumGray =
-    hex "#525252"
+    hex "#354051"
 
 
 pink : Color
@@ -46,12 +46,12 @@ pink =
 
 darkGray : Color
 darkGray =
-    hex "#1D1D1D"
+    hex "#272c35"
 
 
 lightMediumGray : Color
 lightMediumGray =
-    hex "#9C9C9C"
+    hex "#354051"
 
 
 yellow : Color

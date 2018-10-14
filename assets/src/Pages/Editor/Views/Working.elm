@@ -106,7 +106,6 @@ viewActions model =
         _ ->
             Html.styled Html.div
                 [ width (px 360)
-                , borderRight3 (px 2) solid Theme.staticBorder
                 , flexShrink (int 0)
                 ]
                 []
@@ -152,6 +151,7 @@ viewEditors : WorkingState.Model -> Html WorkingState.Msg
 viewEditors model =
     EditorsView.view
         { elmCode = model.elmCode
+        , elchemyCode = model.elchemyCode
         , analysis = model.analysis
         , onElmChange = WorkingState.ElmCodeChanged
         , onTokenChange = WorkingState.TokenChanged

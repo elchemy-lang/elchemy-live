@@ -1,4 +1,4 @@
-module Pages.Editor.Effects exposing (..)
+module Pages.Editor.Effects exposing (attachToWorkspace, authenticate, compile, createRevision, delay, downloadZip, escapePressed, formatCode, getDocs, getRevision, keyCombos, moveElmCursor, navigate, networkStatus, openInNewTab, redirect, reloadOutput, saveToken, searchPackages, updateRecoveryRevision, updateUser, workspaceUpdates)
 
 import Data.Jwt as Jwt exposing (Jwt)
 import Effect.Command as Command exposing (Command)
@@ -47,6 +47,7 @@ getRevision revisionId =
             ApiRevision.selection Revision
                 |> with ApiRevision.htmlCode
                 |> with ApiRevision.elmCode
+                |> with ApiRevision.elchemyCode
                 |> with (ApiRevision.packages Package.selection)
                 |> with (ApiHelpers.defaultField "" ApiRevision.title)
                 |> with (ApiHelpers.versionField ApiRevision.elmVersion)
@@ -173,6 +174,7 @@ workspaceUpdates token =
         (\connected ->
             if connected then
                 Connected
+
             else
                 Disconnected
         )
@@ -217,6 +219,7 @@ createRevision token termsVersion revision =
             { inputs =
                 { elmCode = revision.elmCode
                 , htmlCode = revision.htmlCode
+                , elchemyCode = revision.elchemyCode
                 , packages = List.map Package.toInputObject revision.packages
                 , termsVersion = termsVersion
                 , title =

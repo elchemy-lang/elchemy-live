@@ -1,4 +1,4 @@
-module Ellie.Ui.Theme exposing (..)
+module Ellie.Ui.Theme exposing (accent, blue, buttonBackground, buttonBorder, connectionStatusConnected, connectionStatusDisconnected, controlBorder, darkGray, darkMediumGray, darkStyles, draggableBorder, editorFontFamily, editorHeaderBackground, failure, green, information, lightGray, lightMediumGray, lightStyles, markdownCodeBackground, mediumGray, pink, primaryBackground, primaryForeground, red, secondaryBackground, secondaryForeground, staticBorder, success, tabActiveBorder, tabForeground, warning, workbenchWatermark, yellow)
 
 import Css exposing (..)
 import Css.Foreign
@@ -125,14 +125,14 @@ darkStyles =
         , property "--theme-color-border-control" mediumGray.value
         , property "--theme-color-accent" pink.value
         , property "--theme-color-background-primary" darkMediumGray.value
-        , property "--theme-color-background-secondary" darkGray.value
+        , property "--theme-color-background-secondary" darkMediumGray.value
         , property "--theme-color-foreground-primary" lightGray.value
         , property "--theme-color-foreground-secondary" lightMediumGray.value
         , property "--theme-color-connection-status-connected" green.value
         , property "--theme-color-connection-status-disconnected" red.value
         , property "--theme-color-button-border" "#3F3F3F"
         , property "--theme-color-button-background" "#525252"
-        , property "--theme-color-editor-header-background" "#222222"
+        , property "--theme-color-editor-header-background" darkMediumGray.value
         , property "--theme-color-workbench-watermark" "#252525"
         , property "--theme-color-tab-active-border" "#525252"
         , property "--theme-color-tab-foreground" "#DDDDDD"
@@ -161,7 +161,7 @@ lightStyles =
 
 darkMediumGray : Color
 darkMediumGray =
-    hex "292929"
+    hex "#272c35"
 
 
 lightGray : Color
@@ -171,7 +171,7 @@ lightGray =
 
 mediumGray : Color
 mediumGray =
-    hex "#525252"
+    hex "#ffffff"
 
 
 pink : Color
