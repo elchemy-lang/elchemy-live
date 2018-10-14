@@ -1,10 +1,12 @@
-module Pages.Editor.State.Working exposing (..)
+module Pages.Editor.State.Working exposing (ErrorsPane(..), Model, Msg(..), SuccessPane(..), Workbench(..), addNotification, addNotificationIf, canReplaceRevision, compilerVersion, fromEditorAction, hasChanged, init, reset, subscriptions, toRevision, update, withRecoveryUpdate)
 
 import BoundedDeque exposing (BoundedDeque)
+import Data.Elchemy as Elchemy
 import Data.Jwt exposing (Jwt)
 import Data.Replaceable as Replaceable exposing (Replaceable)
 import Effect.Command as Command exposing (Command)
 import Effect.Subscription as Subscription exposing (Subscription)
+import Elchemy.Compiler as Elchemy
 import Ellie.Ui.CodeEditor as CodeEditor exposing (Located, Token)
 import Elm.Compiler as Compiler
 import Elm.Docs as Docs exposing (Module)
@@ -21,6 +23,7 @@ import Pages.Editor.Types.Notification as Notification exposing (Notification)
 import Pages.Editor.Types.Revision as Revision exposing (Revision)
 import Pages.Editor.Types.User as User exposing (User)
 import Pages.Editor.Types.WorkspaceUpdate as WorkspaceUpdate exposing (WorkspaceUpdate)
+
 
 
 -- MODEL
@@ -56,6 +59,7 @@ type SuccessPane
 type alias Model =
     { elmCode : String
     , htmlCode : String
+    , elchemyCode : String
     , packages : List Package
     , projectName : String
     , token : Jwt
@@ -112,6 +116,7 @@ reset token user recovery external defaultPackages =
     in
     { elmCode = activeRevision.elmCode
     , htmlCode = activeRevision.htmlCode
+    , elchemyCode = activeRevision.elchemyCode
     , packages = activeRevision.packages
     , projectName = activeRevision.title
     , notifications = []
@@ -149,6 +154,7 @@ addNotificationIf : Bool -> Notification -> Model -> Model
 addNotificationIf cond notification model =
     if cond then
         addNotification notification model
+
     else
         model
 
@@ -170,6 +176,7 @@ toRevision : Model -> Revision
 toRevision model =
     { elmCode = model.elmCode
     , htmlCode = model.htmlCode
+    , elchemyCode = model.elchemyCode
     , packages = model.packages
     , title = model.projectName
     , elmVersion = Compiler.version
@@ -334,6 +341,7 @@ update msg ({ user } as model) =
                             ( { model | saving = False, revision = Replaceable.Loaded ( revisionId, revision ) }
                             , Command.none
                             )
+
                         else
                             ( { model | saving = False }
                             , Command.none
@@ -399,7 +407,7 @@ update msg ({ user } as model) =
             ErrorsPaneSelected pane ->
                 case model.workbench of
                     FinishedWithError state ->
-                        ( { model | workbench = FinishedWithError { state | pane = pane } }
+                        ( { model | workbench = FinishedWithError { state | pane = pane } } |> Debug.log "Error"
                         , Command.none
                         )
 
@@ -421,6 +429,7 @@ update msg ({ user } as model) =
                     ( { model | workbenchRatio = 0.5 }
                     , Command.none
                     )
+
                 else
                     ( { model | workbenchRatio = 0 }
                     , Command.none
@@ -490,9 +499,10 @@ update msg ({ user } as model) =
             CompileRequested ->
                 if model.compiling then
                     ( model, Command.none )
+
                 else
                     ( { model | compiling = True }
-                    , Effects.compile model.token (compilerVersion model) model.elmCode model.packages
+                    , Effects.compile model.token (compilerVersion model) (Elchemy.wrapCode model.elmCode) model.packages
                         |> Command.map
                             (\result ->
                                 case result of
@@ -520,6 +530,7 @@ update msg ({ user } as model) =
                     ( True, Nothing, Finished state ) ->
                         ( { model
                             | compiling = False
+                            , elchemyCode = Elchemy.tree model.elmCode
                             , workbench =
                                 Finished
                                     { state
@@ -534,6 +545,7 @@ update msg ({ user } as model) =
                     ( True, Nothing, _ ) ->
                         ( { model
                             | compiling = False
+                            , elchemyCode = Elchemy.tree model.elmCode
                             , workbench =
                                 Finished
                                     { logs = BoundedDeque.empty 50
@@ -591,6 +603,7 @@ update msg ({ user } as model) =
             CollapseHtml ->
                 ( if model.editorsRatio == 1 then
                     { model | editorsRatio = 0.75 }
+
                   else
                     { model | editorsRatio = 1 }
                 , Command.none
@@ -667,7 +680,7 @@ update msg ({ user } as model) =
                 )
 
             HtmlCodeChanged code ->
-                ( { model | htmlCode = code }
+                ( model
                 , Command.none
                 )
 
@@ -694,6 +707,7 @@ update msg ({ user } as model) =
                                 model.defaultPackages
                             , Command.none
                             )
+
                         else
                             ( model, Command.none )
 
@@ -707,6 +721,7 @@ update msg ({ user } as model) =
                                 model.defaultPackages
                             , Command.none
                             )
+
                         else
                             ( model, Command.none )
 
@@ -746,6 +761,7 @@ update msg ({ user } as model) =
                                         |> Command.map (Result.mapError (\_ -> ()))
                                         |> Command.map (RevisionLoaded newRevisionId)
                                     )
+
                                 else
                                     ( model, Command.none )
 
@@ -756,6 +772,7 @@ update msg ({ user } as model) =
                                         |> Command.map (Result.mapError (\_ -> ()))
                                         |> Command.map (RevisionLoaded newRevisionId)
                                     )
+
                                 else
                                     ( model, Command.none )
 
@@ -766,6 +783,7 @@ update msg ({ user } as model) =
                                         |> Command.map (Result.mapError (\_ -> ()))
                                         |> Command.map (RevisionLoaded newRevisionId)
                                     )
+
                                 else
                                     ( model, Command.none )
 
@@ -822,6 +840,7 @@ withRecoveryUpdate ( model, command ) =
         , Effects.updateRecoveryRevision <|
             if hasChanged model then
                 Just (toRevision model)
+
             else
                 Nothing
         ]
@@ -854,6 +873,7 @@ subscriptions model =
                 (\online ->
                     if online then
                         NoOp
+
                     else
                         OnlineStatusChanged False
                 )
@@ -866,12 +886,14 @@ fromEditorAction model action =
         EditorAction.Save ->
             if model.connected && hasChanged model then
                 SaveRequested
+
             else
                 NoOp
 
         EditorAction.Recompile ->
             if model.compiling then
                 NoOp
+
             else
                 CompileRequested
 
@@ -880,6 +902,7 @@ fromEditorAction model action =
                 Finished state ->
                     if state.canDebug then
                         SuccessPaneSelected SuccessDebug
+
                     else
                         NoOp
 

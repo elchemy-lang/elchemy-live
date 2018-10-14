@@ -1,4 +1,4 @@
-module Pages.Editor.Views.StatusBar exposing (..)
+module Pages.Editor.Views.StatusBar exposing (Config, view)
 
 import Css exposing (..)
 import Ellie.Ui.Icon as Icon
@@ -23,7 +23,6 @@ view config =
         [ css
             [ width (pct 100)
             , height (px 32)
-            , borderTop3 (px 2) solid Theme.staticBorder
             , flexShrink zero
             , justifyContent spaceBetween
             , alignItems center
@@ -40,16 +39,6 @@ view config =
             ]
             []
             [ Html.styled Html.a
-                [ marginRight (px 16)
-                , color Theme.primaryForeground
-                , textDecoration none
-                , fontSize (px 16)
-                ]
-                [ Attributes.href "https://zeit.co"
-                , Attributes.target "_blank"
-                ]
-                [ Html.text "Hosted on ▲ ZEIT Now" ]
-            , Html.styled Html.a
                 [ marginRight (px 16)
                 , color Theme.primaryForeground
                 , textDecoration none
@@ -84,6 +73,7 @@ view config =
                 , color <|
                     if config.connected then
                         Theme.connectionStatusConnected
+
                     else
                         Theme.connectionStatusDisconnected
                 ]
@@ -100,6 +90,7 @@ view config =
                         ++ " notification"
                         ++ (if config.notificationCount == 1 then
                                 ""
+
                             else
                                 "s"
                            )
@@ -116,6 +107,7 @@ view config =
                         [ paddingLeft (px 4) ]
                         []
                         [ Html.text <| toString config.notificationCount ]
+
                   else
                     Html.text ""
                 ]

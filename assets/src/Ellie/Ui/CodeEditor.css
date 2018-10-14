@@ -6,34 +6,60 @@ code-editor {
   z-index: 0;
 }
 
-code-editor .CodeMirror {
+/* code-editor .CodeMirror {
   background-color: #292929 !important;
   width: 100%;
   height: 100%;
   font-family: var(--theme-font-family-editor);
   font-size: var(--editor-font-size);
+} */
+
+code-editor .CodeMirror {
+  width: 100%;
+  height: 100%;
+  font-family: Hasklig, monospace;
+  font-size: 14px;
+  font-weight: normal;
+  background-color: #2F3541 !important;
+  -webkit-font-smoothing: antialiased;
 }
 
 .CodeMirror-focused .CodeMirror-activeline-background,
 .CodeMirror-focused .CodeMirror-activeline-gutter {
-  background-color: #1b1b1b !important;
+  background-color: #2F3541 !important;
 }
 
 .CodeMirror .CodeMirror-gutters {
-  background-color: #292929 !important;
+  background-color: #2F3541 !important;
+}
+
+.CodeMirror-cursor {
+  background-color: #f1602b !important;
 }
 
 .CodeMirror .cm-keyword {
-  color: #ff6cc9 !important;
+  color: #44C0C6 !important;
 }
 
-.CodeMirror .cm-variable-2,
-.CodeMirror .cm-qualifier {
-  color: inherit !important;
+.CodeMirror .cm-number {
+  color: #D1BC92 !important;
+}
+
+.CodeMirror .cm-variable {
+  color: #bcc7d2 !important;
+}
+
+.CodeMirror .cm-variable-2 {
+  color: #D1BC92 !important;
+}
+
+.CodeMirror .cm-tag {
+  color: #D1BC92 !important;
 }
 
 .CodeMirror .CodeMirror-linenumber {
-  color: #8D8D97 !important;
+  color: #606671 !important;
+  opacity: 0.6;
 }
 
 .CodeMirror-lint-tooltip {
@@ -41,10 +67,8 @@ code-editor .CodeMirror {
   color: #e9eded !important;
   border: 0 !important;
   padding: 12px !important;
-  box-shadow: 0 2px 8px 2px rgba(0, 0, 0, 0.75);
+
   border-radius: 3px !important;
-  white-space: pre-line;
-  max-width: 750px !important;
 }
 
 .CodeMirror-lint-marker-warning, .CodeMirror-lint-message-warning,
@@ -60,18 +84,33 @@ code-editor .CodeMirror {
 }
 
 .CodeMirror-lint-mark-error {
-  border-bottom-color: #ec5f67;
+  border-bottom-color: #ec5f67 !important;
 }
 
 .CodeMirror-lint-mark-warning {
-  border-bottom-color: #DECB6B;
+  border-bottom-color: #DECB6B !important;
 }
 
-
 .CodeMirror .cm-tag.cm-bracket {
-  color: #82b1ff;
+  color: #82b1ff !important;
+}
+
+.CodeMirror .cm-type {
+  color: #dee2e3 !important;
+}
+.CodeMirror .cm-string {
+  color: #FC8458 !important;
 }
 
 .CodeMirror .cm-attribute {
-  color: #decb6b;
+  color: #decb6b !important;
+}
+
+.CodeMirror pre {
+  padding-left: 20px !important ;
+}
+
+.CodeMirror-lines {
+  padding-left: 20px !important ;
+  margin: 0 !important;
 }

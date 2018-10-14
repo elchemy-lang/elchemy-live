@@ -1,4 +1,4 @@
-module Pages.Editor.Types.Revision exposing (..)
+module Pages.Editor.Types.Revision exposing (External(..), Id, Revision, default, editorLink, embedLink, localStorageDecoder, localStorageEncoder)
 
 import Data.Url as Url exposing (Url)
 import Ellie.Constants as Constants
@@ -22,6 +22,7 @@ type alias Id =
 type alias Revision =
     { htmlCode : String
     , elmCode : String
+    , elchemyCode : String
     , packages : List Package
     , title : String
     , elmVersion : Version
@@ -40,9 +41,10 @@ embedLink id =
 
 localStorageDecoder : Decoder Revision
 localStorageDecoder =
-    Decode.map5 Revision
+    Decode.map6 Revision
         (Decode.field "htmlCode" Decode.string)
         (Decode.field "elmCode" Decode.string)
+        (Decode.field "elchemyCode" Decode.string)
         (Decode.field "packages" (Decode.list Package.decoder))
         (Decode.field "title" Decode.string)
         (Decode.field "elmVersion" Version.decoder)
@@ -53,6 +55,7 @@ localStorageEncoder revision =
     Encode.object
         [ ( "htmlCode", Encode.string revision.htmlCode )
         , ( "elmCode", Encode.string revision.elmCode )
+        , ( "elchemyCode", Encode.string revision.elchemyCode )
         , ( "packages", Encode.list <| List.map Package.encoder revision.packages )
         , ( "title", Encode.string revision.title )
         , ( "elmVersion", Version.encoder revision.elmVersion )
@@ -64,67 +67,30 @@ default packages =
     { packages = packages
     , title = ""
     , elmVersion = Compiler.version
+    , elchemyCode = ""
     , htmlCode = """<html>
+<html>
 <head>
   <style>
     /* you can style your program here */
   </style>
 </head>
 <body>
-  <main></main>
+  <div id="app"></div>
   <script>
-    var app = Elm.Main.init({ node: document.querySelector('main') })
+    var node = document.getElementById("app");
+    var app = Elm.Main.embed(node)
     // you can use ports and stuff here
   </script>
 </body>
 </html>
+
 """
-    , elmCode = """module Main exposing (main)
+    , elmCode = """module Main exposing (..)
 
-import Browser
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+run : String
+run =
+    "Hello, world!"
 
-
-type alias Model =
-    { count : Int }
-
-
-initialModel : Model
-initialModel =
-    { count = 0 }
-
-
-type Msg
-    = Increment
-    | Decrement
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        Increment ->
-            { model | count = model.count + 1 }
-
-        Decrement ->
-            { model | count = model.count - 1 }
-
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ button [ onClick Increment ] [ text "+1" ]
-        , div [] [ text <| String.fromInt model.count ]
-        , button [ onClick Decrement ] [ text "-1" ]
-        ]
-
-
-main : Program () Model Msg
-main =
-    Browser.sandbox
-        { init = initialModel
-        , view = view
-        , update = update
-        }
 """
     }

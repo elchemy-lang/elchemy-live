@@ -8,6 +8,7 @@ import Html.Styled.Attributes as Attributes exposing (css)
 import Html.Styled.Events as Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Colors
 
 
 type Direction
@@ -70,12 +71,7 @@ horizontalStyles =
             [ Css.Foreign.typeSelector "ellie-ui-split-pane-panel"
                 [ width (pct 50)
                 , height (pct 100)
-                , firstChild
-                    [ borderRight3 (px 1) solid Theme.draggableBorder
-                    ]
-                , lastChild
-                    [ borderLeft3 (px 1) solid Theme.draggableBorder
-                    ]
+
                 ]
             , Css.Foreign.typeSelector "ellie-ui-split-pane-divider"
                 [ width (px 10)
@@ -105,10 +101,10 @@ verticalStyles =
                 [ height (pct 50)
                 , width (pct 100)
                 , firstChild
-                    [ borderBottom3 (px 1) solid Theme.draggableBorder
+                    [ borderBottom3 (px 1) solid Colors.darkGray
                     ]
                 , lastChild
-                    [ borderTop3 (px 1) solid Theme.draggableBorder
+                    [ borderTop3 (px 1) solid Colors.darkGray
                     ]
                 ]
             , Css.Foreign.typeSelector "ellie-ui-split-pane-divider"
