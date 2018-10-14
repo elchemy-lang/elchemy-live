@@ -530,6 +530,7 @@ update msg ({ user } as model) =
                     ( True, Nothing, Finished state ) ->
                         ( { model
                             | compiling = False
+                            , elchemyCode = Elchemy.tree model.elmCode
                             , workbench =
                                 Finished
                                     { state
