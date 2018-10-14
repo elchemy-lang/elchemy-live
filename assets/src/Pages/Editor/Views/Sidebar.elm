@@ -1,4 +1,4 @@
-module Pages.Editor.Views.Sidebar exposing (..)
+module Pages.Editor.Views.Sidebar exposing (view, viewIconButton, viewIconLink, viewLogo)
 
 import Css exposing (..)
 import Ellie.Ui.Icon as Icon
@@ -28,9 +28,7 @@ view current =
             , viewIconButton Icon.Settings "Settings" Actions.Settings current
             ]
         , Html.div []
-            [ viewIconLink Icon.Slack "https://elmlang.slack.com/channels/ellie"
-            , viewIconLink Icon.GithubProjects "https://github.com/ellie-app/ellie/projects"
-            , viewIconLink Icon.GitHub "https://github.com/ellie-app/ellie"
+            [ viewIconLink Icon.GitHub "https://github.com/elchemy/elchemy-live"
             ]
         ]
 
@@ -43,9 +41,13 @@ viewLogo =
             , height (px 58)
             , padding4 (px 16) (px 16) (px 12) (px 16)
             , color Theme.primaryForeground
+            , fontFamilies [ "Helvetica Neue" ]
+            , fontWeight bold
+            , fontSize (em 2)
+            , cursor default
             ]
         ]
-        [ Icon.view Icon.SmallLogo
+        [ Html.text "El"
         ]
 
 
@@ -79,6 +81,7 @@ viewIconButton icon tooltip default current =
             , color <|
                 if isActive then
                     Theme.primaryForeground
+
                 else
                     Theme.secondaryForeground
             , hover

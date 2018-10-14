@@ -52,13 +52,13 @@ title model =
         AppState.Working workingState ->
             case workingState.projectName of
                 "" ->
-                    "Ellie - Untitled"
+                    "Elchemy Live - Untitled"
 
                 name ->
-                    "Ellie - " ++ workingState.projectName
+                    "Elchemy Live - " ++ workingState.projectName
 
         _ ->
-            "Ellie"
+            "Elchemy Live"
 
 
 
