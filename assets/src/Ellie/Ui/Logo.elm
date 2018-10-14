@@ -13,7 +13,7 @@ flat =
     Html.div
         [ css
             [ color Theme.primaryForeground
-            , fontFamilies [ "Helvetica Neue" ]
+            , fontFamilies [ "Helvetica Neue", "Helvetica" ]
             , fontWeight bold
             , fontSize (em 4)
             , cursor default
