@@ -15,7 +15,7 @@ flat =
             [ color Theme.primaryForeground
             , fontFamilies [ "Helvetica Neue", "Helvetica" ]
             , fontWeight bold
-            , fontSize (em 4)
+            , fontSize (px 16)
             , cursor default
             , left (pct 50)
             ]
@@ -25,4 +25,14 @@ flat =
 
 animated : Html msg
 animated =
-    flat
+    Html.div
+        [ css
+            [ color Theme.primaryForeground
+            , fontFamilies [ "Helvetica Neue", "Helvetica" ]
+            , fontWeight bold
+            , fontSize (vw 5)
+            , cursor default
+            , left (pct 50)
+            ]
+        ]
+        [ Html.text "Elchemy Live" ]

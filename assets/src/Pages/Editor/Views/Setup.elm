@@ -1,8 +1,7 @@
-module Pages.Editor.Views.Setup
-    exposing
-        ( Stage(..)
-        , view
-        )
+module Pages.Editor.Views.Setup exposing
+    ( Stage(..)
+    , view
+    )
 
 import Css exposing (..)
 import Ellie.Ui.Button as Button
@@ -44,9 +43,7 @@ view loadingStage =
 
             _ ->
                 [ Html.styled Html.div
-                    [
-                     maxWidth (px 500)
-                    , position relative
+                    [ position relative
                     ]
                     []
                     [ Logo.animated ]

@@ -192,7 +192,7 @@ viewWorkbench model =
             else
                 Nothing
         , onSave =
-            if model.connected && WorkingState.hasChanged model then
+            if model.connected && WorkingState.hasChanged model && not model.compiling then
                 Just WorkingState.SaveRequested
             else
                 Nothing

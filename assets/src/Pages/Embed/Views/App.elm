@@ -24,13 +24,13 @@ title model =
         Working workingState ->
             case workingState.revision.data.title of
                 "" ->
-                    "Ellie - Untitled"
+                    "Elchemy Live - Untitled"
 
                 name ->
-                    "Ellie - " ++ name
+                    "Elchemy Live - " ++ name
 
         _ ->
-            "Ellie"
+            "Elchemy"
 
 
 view : Model -> Html Msg
@@ -59,8 +59,7 @@ viewLoading =
         ]
         []
         [ Html.styled Html.div
-            [ maxWidth (px 300)
-            , height (px 200)
+            [ height (px 200)
             , width (pct 80)
             ]
             []
@@ -133,7 +132,6 @@ viewHeader revisionId current =
                 [ Html.text " on " ]
             , Html.styled Html.span
                 [ height (px 16)
-                , width (px 45)
                 , display inlineBlock
                 , verticalAlign bottom
                 ]
@@ -160,6 +158,7 @@ viewTab mine current =
         , textTransform capitalize
         , if Panel.eq mine current then
             borderBottom3 (px 2) solid Theme.tabActiveBorder
+
           else
             batch []
         ]
@@ -190,7 +189,7 @@ viewContent state =
             Panel.Html ->
                 viewOverlayed <|
                     CodeEditor.view
-                        [ CodeEditor.mode "htmlmixed"
+                        [ CodeEditor.mode "elixir"
                         , CodeEditor.value state.revision.data.elchemyCode
                         , CodeEditor.readOnly
                         ]
@@ -252,7 +251,7 @@ viewOutput state =
                     ]
                     []
                     [ Output.view
-                        [ Output.html state.revision.data.elchemyCode
+                        [ Output.html state.revision.data.htmlCode
                         , Output.elmSource <| Url.toString <| Revision.outputLink state.revision.id
                         , Output.onCanDebug CanDebugChanged
                         , Output.debug (state.debug == AppState.Debugging)
@@ -324,7 +323,6 @@ viewClickToRun =
         [ Events.onClick EmbedRunStarted ]
         [ Html.styled Html.div
             [ width (pct 80)
-            , maxWidth (px 300)
             , marginBottom (px 24)
             ]
             []
@@ -351,7 +349,6 @@ viewAnimatedContainer text =
         []
         [ Html.styled Html.div
             [ width (pct 80)
-            , maxWidth (px 300)
             , marginBottom (px 24)
             ]
             []

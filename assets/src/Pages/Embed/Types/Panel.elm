@@ -26,7 +26,7 @@ eq left right =
 fromString : String -> Panel
 fromString input =
     case input of
-        "html" ->
+        "elixir" ->
             Html
 
         "output" ->
@@ -40,10 +40,10 @@ toString : Panel -> String
 toString panel =
     case panel of
         Html ->
-            "html"
+            "elixir"
 
         Output ->
             "output"
 
         Elm ->
-            "elm"
+            "elchemy"
