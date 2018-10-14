@@ -221,7 +221,7 @@ canReplaceRevision revisionId model =
 type Msg
     = -- Editor stuff
       ElmCodeChanged String
-    | HtmlCodeChanged String
+    | ElixirCodeChanged String
     | FormatRequested
     | FormatCompleted (Result () String)
     | CollapseHtml
@@ -678,8 +678,8 @@ update msg ({ user } as model) =
                 , Command.none
                 )
 
-            HtmlCodeChanged code ->
-                ( { model | htmlCode = code }
+            ElixirCodeChanged code ->
+                ( { model | elchemyCode = code }
                 , Command.none
                 )
 
