@@ -1,6 +1,7 @@
 module Pages.Editor.Effects exposing (attachToWorkspace, authenticate, compile, createRevision, delay, downloadZip, escapePressed, formatCode, getDocs, getRevision, keyCombos, moveElmCursor, navigate, networkStatus, openInNewTab, redirect, reloadOutput, saveToken, searchPackages, updateRecoveryRevision, updateUser, workspaceUpdates)
 
 import Data.Jwt as Jwt exposing (Jwt)
+import Data.Elchemy as Elchemy
 import Effect.Command as Command exposing (Command)
 import Effect.Subscription as Subscription exposing (Subscription)
 import Ellie.Api.Helpers as ApiHelpers
@@ -47,6 +48,7 @@ getRevision revisionId =
             ApiRevision.selection Revision
                 |> with ApiRevision.htmlCode
                 |> with ApiRevision.elmCode
+                |> with ApiRevision.elixirCode
                 |> with (ApiRevision.packages Package.selection)
                 |> with (ApiHelpers.defaultField "" ApiRevision.title)
                 |> with (ApiHelpers.versionField ApiRevision.elmVersion)
@@ -115,7 +117,7 @@ compile token elmVersion elmCode packages =
                 |> with (ApiMutation.compile arguments)
 
         arguments =
-            { elmCode = elmCode
+            { elmCode = Elchemy.wrapCode elmCode
             , packages = List.map makePackageInput packages
             , elmVersion = ApiScalar.ElmVersion <| Version.toString elmVersion
             }
@@ -218,6 +220,7 @@ createRevision token termsVersion revision =
             { inputs =
                 { elmCode = revision.elmCode
                 , htmlCode = revision.htmlCode
+                , elixirCode = revision.elixirCode
                 , packages = List.map Package.toInputObject revision.packages
                 , termsVersion = termsVersion
                 , title =

@@ -32,6 +32,7 @@ exampleRevision : Revision
 exampleRevision =
     { htmlCode = "hi"
     , elmCode = "hello"
+    , elixirCode = ""
     , packages = []
     , title = "hi"
     , elmVersion = Version 0 18 0
@@ -64,6 +65,11 @@ htmlCode =
     QueryParser.string "htmlcode"
         |> QueryParser.map (Maybe.withDefault "")
 
+elixirCode : QueryParser.Parser String
+elixirCode =
+    QueryParser.string "elixirCode"
+        |> QueryParser.map (Maybe.withDefault "")
+
 packages : QueryParser.Parser (List Package)
 packages =
     QueryParser.custom "packages" <|
@@ -82,9 +88,10 @@ title =
 
 revision : QueryParser.Parser Revision
 revision =
-    QueryParser.map5 Revision
+    QueryParser.map6 Revision
         htmlCode
         elmCode
+        elixirCode
         packages
         title
         elmVersion

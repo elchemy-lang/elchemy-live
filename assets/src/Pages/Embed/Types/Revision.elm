@@ -13,6 +13,7 @@ type alias Id =
 type alias Revision =
     { htmlCode : String
     , elmCode : String
+    , elixirCode : String
     , packages : List Package
     , title : String
     , elmVersion : Version

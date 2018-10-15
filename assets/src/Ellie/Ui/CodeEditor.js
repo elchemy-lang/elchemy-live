@@ -51,9 +51,9 @@ const load = () => {
     import(/* webpackChunkName: "codemirror-base", webpackMode: "eager" */ 'codemirror/lib/codemirror.css'),
     import(/* webpackChunkName: "codemirror-base" */ 'codemirror/mode/elm/elm'),
     import(/* webpackChunkName: "codemirror-base" */ 'codemirror/mode/htmlmixed/htmlmixed'),
+    import(/* webpackChunkName: "codemirror-base" */ 'codemirror-mode-elixir'),
     import(/* webpackChunkName: "codemirror-base" */ 'codemirror/addon/lint/lint'),
     import(/* webpackChunkName: "codemirror-base" */ 'codemirror/addon/selection/active-line'),
-    import('codemirror-mode-elixir'),
 
     // import(/* webpackChunkName: "codemirror-base" */ 'codemirror/addon/hint/show-hint'),
     // import(/* webpackChunkName: "codemirror-base", webpackMode: "eager" */ 'codemirror/addon/hint/show-hint.css'),

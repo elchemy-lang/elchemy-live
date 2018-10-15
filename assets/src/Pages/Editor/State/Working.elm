@@ -59,7 +59,7 @@ type SuccessPane
 type alias Model =
     { elmCode : String
     , htmlCode : String
-    , elchemyCode : String
+    , elixirCode : String
     , packages : List Package
     , projectName : String
     , token : Jwt
@@ -116,7 +116,7 @@ reset token user recovery external defaultPackages =
     in
     { elmCode = activeRevision.elmCode
     , htmlCode = activeRevision.htmlCode
-    , elchemyCode = ""
+    , elixirCode = activeRevision.elixirCode
     , packages = activeRevision.packages
     , projectName = activeRevision.title
     , notifications = []
@@ -176,6 +176,7 @@ toRevision : Model -> Revision
 toRevision model =
     { elmCode = model.elmCode
     , htmlCode = model.htmlCode
+    , elixirCode = model.elixirCode
     , packages = model.packages
     , title = model.projectName
     , elmVersion = Compiler.version
@@ -501,7 +502,7 @@ update msg ({ user } as model) =
 
                 else
                     ( { model | compiling = True }
-                    , Effects.compile model.token (compilerVersion model) (Elchemy.wrapCode model.elmCode) model.packages
+                    , Effects.compile model.token (compilerVersion model) model.elmCode model.packages
                         |> Command.map
                             (\result ->
                                 case result of
@@ -529,7 +530,7 @@ update msg ({ user } as model) =
                     ( True, Nothing, Finished state ) ->
                         ( { model
                             | compiling = False
-                            , elchemyCode = Elchemy.tree model.elmCode
+                            , elixirCode = Elchemy.tree model.elmCode
                             , workbench =
                                 Finished
                                     { state
@@ -544,7 +545,7 @@ update msg ({ user } as model) =
                     ( True, Nothing, _ ) ->
                         ( { model
                             | compiling = False
-                            , elchemyCode = Elchemy.tree model.elmCode
+                            , elixirCode = Elchemy.tree model.elmCode
                             , workbench =
                                 Finished
                                     { logs = BoundedDeque.empty 50
@@ -679,13 +680,14 @@ update msg ({ user } as model) =
                 )
 
             ElixirCodeChanged code ->
-                ( { model | elchemyCode = code }
+                ( { model | elixirCode = code }
                 , Command.none
                 )
 
             CrashRecovered revision ->
                 ( { model
                     | elmCode = revision.elmCode
+                    , elixirCode = revision.elixirCode
                     , htmlCode = revision.htmlCode
                     , packages = revision.packages
                     , projectName = revision.title

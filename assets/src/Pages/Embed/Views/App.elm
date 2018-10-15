@@ -190,7 +190,7 @@ viewContent state =
                 viewOverlayed <|
                     CodeEditor.view
                         [ CodeEditor.mode "elixir"
-                        , CodeEditor.value "# Click compile to see the code"
+                        , CodeEditor.value state.revision.data.elixirCode
                         , CodeEditor.readOnly
                         ]
 

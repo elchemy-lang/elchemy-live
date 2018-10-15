@@ -72,6 +72,7 @@ defmodule Ellie.Adapters.Api.Ecto do
          {:ok, packages} <- EnumHelpers.traverse_result(package_combos, &parse_package/1),
          {:ok, html_code} <- Map.fetch(revision_data, "htmlCode"),
          {:ok, elm_code} <- Map.fetch(revision_data, "elmCode"),
+         {:ok, elixir_code} <- Map.fetch(revision_data, "elixirCode"),
          {:ok, %{"projectId"=>project_id_string, "revisionNumber"=>revision_number}} <- Map.fetch(revision_data, "id"),
          {:ok, project_id} <- PrettyId.cast(project_id_string),
          title <- Map.get(revision_data, "title"),
@@ -82,6 +83,7 @@ defmodule Ellie.Adapters.Api.Ecto do
           revision = %Revision{
             html_code: html_code,
             elm_code: elm_code,
+            elixir_code: elixir_code,
             title: title,
             elm_version: Version.create(0, 18, 0),
             packages: packages,

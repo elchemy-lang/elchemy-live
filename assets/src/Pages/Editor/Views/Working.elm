@@ -151,7 +151,7 @@ viewEditors : WorkingState.Model -> Html WorkingState.Msg
 viewEditors model =
     EditorsView.view
         { elmCode = model.elmCode
-        , elchemyCode = model.elchemyCode
+        , elixirCode = model.elixirCode
         , analysis = model.analysis
         , onElmChange = WorkingState.ElmCodeChanged
         , onTokenChange = WorkingState.TokenChanged
