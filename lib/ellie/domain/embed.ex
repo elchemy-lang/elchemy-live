@@ -15,7 +15,8 @@ defmodule Ellie.Domain.Embed do
 
   @spec compile(revision :: Revision.t) :: status
   def compile(revision) do
-    adapter().compile(revision)
+    revision = %Revision{revision | elm_code: revision.elm_code |> wrap_code}
+    adapter().compile(revision |> IO.inspect(label: "NEW REVISION"))
   end
 
   @spec cleanup(minutes_old :: integer) :: :unit
@@ -26,5 +27,36 @@ defmodule Ellie.Domain.Embed do
   defp adapter() do
     config = Application.get_env(:ellie, Ellie.Domain.Embed, [])
     Keyword.get(config, :adapter, Ellie.Adapters.Embed.Local)
+  end
+
+  # Wrap the code to work with Elchemy
+  defp wrap_code(code) do
+    new_code =
+      code
+      |> String.split("\n")
+      |> Enum.drop(2)
+      |> Enum.join("\n")
+
+    prefix <> new_code <> postfix
+  end
+
+  defp prefix() do
+    """
+module Main exposing (..)
+import Html
+"""
+  end
+
+
+  defp postfix() do
+    """
+
+main : Html.Html msg
+main =
+    Html.text <| toString run
+
+ffi mod fun =
+    Debug.crash "FFI calls do not work in the browser"
+"""
   end
 end

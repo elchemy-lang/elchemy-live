@@ -8,8 +8,8 @@ defmodule Ellie.Domain.Api do
   @type new_revision :: [
     title: String.t | nil,
     elm_code: String.t,
-    elchemy_code: String.t,
     html_code: String.t,
+    elixir_code: String.t,
     packages: list(Package.t),
     terms_version: integer
   ]

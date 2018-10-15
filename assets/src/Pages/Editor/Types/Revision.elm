@@ -22,7 +22,7 @@ type alias Id =
 type alias Revision =
     { htmlCode : String
     , elmCode : String
-    , elchemyCode : String
+    , elixirCode : String
     , packages : List Package
     , title : String
     , elmVersion : Version
@@ -44,7 +44,7 @@ localStorageDecoder =
     Decode.map6 Revision
         (Decode.field "htmlCode" Decode.string)
         (Decode.field "elmCode" Decode.string)
-        (Decode.field "elchemyCode" Decode.string)
+        (Decode.field "elixirCode" Decode.string)
         (Decode.field "packages" (Decode.list Package.decoder))
         (Decode.field "title" Decode.string)
         (Decode.field "elmVersion" Version.decoder)
@@ -55,7 +55,7 @@ localStorageEncoder revision =
     Encode.object
         [ ( "htmlCode", Encode.string revision.htmlCode )
         , ( "elmCode", Encode.string revision.elmCode )
-        , ( "elchemyCode", Encode.string revision.elchemyCode )
+        , ( "elixirCode", Encode.string revision.elixirCode )
         , ( "packages", Encode.list <| List.map Package.encoder revision.packages )
         , ( "title", Encode.string revision.title )
         , ( "elmVersion", Version.encoder revision.elmVersion )
@@ -67,7 +67,7 @@ default packages =
     { packages = packages
     , title = ""
     , elmVersion = Compiler.version
-    , elchemyCode = ""
+    , elixirCode = "# Click compile to see Elixir code"
     , htmlCode = """<html>
 <html>
 <head>

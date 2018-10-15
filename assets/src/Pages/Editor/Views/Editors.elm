@@ -17,8 +17,8 @@ type alias Config msg =
     , onElmChange : String -> msg
     , onTokenChange : CodeEditor.Located CodeEditor.Token -> msg
     , htmlCode : String
-    , elchemyCode : String
-    , onHtmlChange : String -> msg
+    , elixirCode : String
+    , onElixirChange : String -> msg
     , onResize : Float -> msg
     , ratio : Float
     , vimMode : Bool
@@ -136,8 +136,8 @@ view config =
                             Icon.view Icon.Chevron
                     , Html.div [ editorStyles ]
                         [ CodeEditor.view
-                            [ CodeEditor.value config.elchemyCode
-                            , CodeEditor.onChange config.onHtmlChange
+                            [ CodeEditor.value config.elixirCode
+                            , CodeEditor.onChange config.onElixirChange
                             , CodeEditor.mode "elixir"
                             , CodeEditor.tabSize 2
                             , CodeEditor.vim config.vimMode
