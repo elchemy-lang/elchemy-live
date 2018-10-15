@@ -33,7 +33,7 @@ exampleRevision =
     , elmCode = "hello"
     , packages = []
     , title = "hi"
-    , elmVersion = Version 0 19 0
+    , elmVersion = Version 0 18 0
     }
 
 
