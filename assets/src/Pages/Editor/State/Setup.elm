@@ -50,7 +50,7 @@ init : Route -> User -> Int -> ( Model, Command Msg )
 init route user latestTerms =
     -- case ( route, user.acceptedTerms == Just latestTerms ) of
     case ( route, True ) of
-        ( New, _ ) ->
+        ( New, True ) ->
             ( { defaultRevision = Nothing
               , user = user
               , state = Authenticating { revisionId = Nothing }
