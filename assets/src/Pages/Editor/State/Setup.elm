@@ -48,7 +48,8 @@ type alias Transition =
 
 init : Route -> User -> Int -> ( Model, Command Msg )
 init route user latestTerms =
-    case ( route, user.acceptedTerms == Just latestTerms ) of
+    -- case ( route, user.acceptedTerms == Just latestTerms ) of
+    case ( route, True ) of
         ( New, _ ) ->
             ( { defaultRevision = Nothing
               , user = user
@@ -59,13 +60,13 @@ init route user latestTerms =
                 |> Command.map Authenticated
             )
 
-        -- ( New, False ) ->
-        --     ( { defaultRevision = Nothing
-        --       , user = user
-        --       , state = AcceptingTerms { latestTerms = latestTerms, revisionId = Nothing }
-        --       }
-        --     , Command.none
-        --     )
+        ( New, False ) ->
+            ( { defaultRevision = Nothing
+              , user = user
+              , state = AcceptingTerms { latestTerms = latestTerms, revisionId = Nothing }
+              }
+            , Command.none
+            )
 
         ( Example revision, True ) ->
             ( { defaultRevision = Just revision
